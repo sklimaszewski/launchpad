@@ -71,7 +71,7 @@ function githubFetch(string $url, bool $toJson = true)
             'http' => [
                 'method' => 'GET',
                 'header' => [
-                    'User-Agent: eZ Launchpad Installer',
+                    'User-Agent: Symfony Launchpad Installer',
                 ],
             ],
         ]

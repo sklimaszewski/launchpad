@@ -7,11 +7,8 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Console;
+namespace Symfony\Launchpad\Console;
 
-use eZ\Launchpad\Configuration\Configuration;
-use eZ\Launchpad\Configuration\Project as ProjectConfiguration;
-use eZ\Launchpad\Core;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -25,6 +22,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Launchpad\Configuration\Configuration;
+use Symfony\Launchpad\Configuration\Project as ProjectConfiguration;
+use Symfony\Launchpad\Core;
 
 class Application extends BaseApplication
 {
@@ -45,7 +45,7 @@ class Application extends BaseApplication
             |<fg=magenta>--o</>|<fg=blue>===</><fg=red>|</><fg=black>-</><fg=red>|</>
             |<fg=magenta>---</>|   <fg=red>| |</>
        <fg=yellow>*</>   /     \  <fg=red>| |</>
-          |  <fg=white;options=bold>eZ</>   | <fg=red>| |</>
+          |<fg=white;options=bold>Symfony</>| <fg=red>| |</>
           |       |<fg=blue>=</><fg=red>| |</>
           <fg=white;options=bold>Launchpad</> <fg=red>| |</>
           |_______| <fg=red>|<fg=black>_</>|</>
@@ -94,7 +94,7 @@ class Application extends BaseApplication
         $this->loadConfiguration($input);
 
         // add the command from the configuration
-        $commands = $this->container->findTaggedServiceIds('ezlaunchpad.command');
+        $commands = $this->container->findTaggedServiceIds('sflaunchpad.command');
         foreach ($commands as $def => $values) {
             $command = $this->container->get($def);
             if ($command instanceof Core\Command) {
@@ -114,7 +114,7 @@ class Application extends BaseApplication
         $this->container->setParameter('project_path', $projectPath);
 
         // Override the defaults values
-        $globalFilePath = $input->getParameterOption(['--config', '-c'], EZ_HOME.'/ez.yml');
+        $globalFilePath = $input->getParameterOption(['--config', '-c'], SF_HOME.'/sf.yml');
         $fs = new Filesystem();
         $configs = [];
 
@@ -127,7 +127,7 @@ class Application extends BaseApplication
         }
 
         // Load the local values and OVERRIDE
-        $localFilePath = $projectPath.'/.ezlaunchpad.yml';
+        $localFilePath = $projectPath.'/.sflaunchpad.yml';
         if ($fs->exists($localFilePath)) {
             $configs[] = Yaml::parse(file_get_contents($localFilePath));
         }
@@ -182,7 +182,7 @@ class Application extends BaseApplication
                 '--config',
                 '-c',
                 InputOption::VALUE_REQUIRED,
-                'use the given file as configuration file, instead of the default one ('.EZ_HOME.'/ez.yml'.').'
+                'use the given file as configuration file, instead of the default one ('.SF_HOME.'/sf.yml'.').'
             )
         );
 

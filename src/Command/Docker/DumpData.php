@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Command\Docker;
+namespace Symfony\Launchpad\Command\Docker;
 
-use eZ\Launchpad\Core\DockerCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Launchpad\Core\DockerComposeCommand;
 
-final class DumpData extends DockerCommand
+final class DumpData extends DockerComposeCommand
 {
     protected function configure(): void
     {
@@ -26,6 +26,6 @@ final class DumpData extends DockerCommand
     {
         $this->taskExecutor->dumpData();
 
-        return DockerCommand::SUCCESS;
+        return DockerComposeCommand::SUCCESS;
     }
 }

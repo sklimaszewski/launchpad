@@ -7,15 +7,15 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Core;
+namespace Symfony\Launchpad\Core;
 
-use eZ\Launchpad\Configuration\Project as ProjectConfiguration;
-use eZ\Launchpad\Core\OSX\Optimizer\OptimizerInterface;
 use Novactive\Collection\Collection;
 use Symfony\Component\Console\Command\Command as BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Launchpad\Configuration\Project as ProjectConfiguration;
+use Symfony\Launchpad\Core\OSX\Optimizer\OptimizerInterface;
 
 abstract class Command extends BaseCommand
 {

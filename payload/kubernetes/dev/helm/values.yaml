@@ -1,0 +1,46 @@
+# Please note this is just a template/skeleton for a Symfony project in kubernetes.
+# Some manual work needs to be done before the deployment (like adding db persistent storage)
+
+symfony:
+    host: example.com
+    image:
+        # registry: ~ # Injected by the Launchpad
+        # tag: ~ # Injected by the Launchpad
+        # pullSecretConfig: ~ # Injected by the Launchpad
+        pullPolicy: IfNotPresent
+    replicaCount: 1
+    env:
+        plain:
+            APP_ENV: prod
+            RUNNING_ENV: kubernetes
+        secret:
+            APP_SECRET:
+                name: symfony-secret
+                key: app-secret
+            DATABASE_URL:
+                name: symfony-secret
+                key: database-url
+nginx:
+    image:
+        repository: nginx
+        tag: stable-alpine
+        pullPolicy: IfNotPresent
+
+ingress:
+    enabled: true
+    # annotations: {}
+    # className: nginx
+
+mariadb:
+    enabled: true
+    auth:
+        database: symfony
+        username: symfony
+        password: changeme
+    architecture: standalone
+    primary:
+        persistence:
+            enabled: false
+    secondary:
+        persistence:
+            enabled: false

@@ -5,14 +5,14 @@
  * @license   For full copyright and license information view LICENSE file distributed with this source code.
  */
 
-$repo = $_SERVER['argv'][1] ?? 'ezsystems/launchpad';
+$repo = $_SERVER['argv'][1] ?? 'sklimaszewski/launchpad';
 
 $context = stream_context_create(
     [
         'http' => [
             'method' => 'GET',
             'header' => [
-                'User-Agent: eZ Launchpad Installer'
+                'User-Agent: Symfony Launchpad Installer'
             ]
         ]
     ]
@@ -30,7 +30,7 @@ unset($content);
 $assetUrl = $release->assets[0]->browser_download_url;
 
 file_put_contents(
-    "ez.phar",
+    "sf.phar",
     file_get_contents(
         $assetUrl,
         false,
@@ -39,9 +39,9 @@ file_put_contents(
 );
 
 file_put_contents(
-    "ez.phar.pubkey",
+    "sf.phar.pubkey",
     file_get_contents(
-        "https://ezsystems.github.io/launchpad/ez.phar.pubkey",
+        "https://sklimaszewski.github.io/launchpad/sf.phar.pubkey",
         false,
         $context
     )

@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Configuration;
+namespace Symfony\Launchpad\Configuration;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -16,7 +16,7 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('ezlaunchpad');
+        $treeBuilder = new TreeBuilder('sflaunchpad');
         $rootNode = $treeBuilder->getRootNode();
         $rootNode
             ->children()
@@ -24,16 +24,36 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('compose_filename')->defaultValue('docker-compose.yml')->end()
-                        ->scalarNode('network_name')->defaultValue('default-ezlaunchpad')->end()
-                        ->scalarNode('network_prefix_port')->defaultValue(42)->end()
+                        ->scalarNode('network_name')->defaultValue('default-sflaunchpad')->end()
+                        ->scalarNode('network_prefix_port')->defaultValue(0)->end()
                         ->scalarNode('host_machine_mapping')->defaultNull()->end()
                         ->scalarNode('host_composer_cache_dir')->defaultNull()->end()
+                        ->arrayNode('storage_dirs')
+                            ->useAttributeAsKey('name')
+                            ->prototype('scalar')->end()
+                        ->end()
                     ->end()
                 ->end()
                 ->arrayNode('provisioning')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('folder_name')->defaultValue('provisioning')->end()
+                        ->scalarNode('folder_name')->defaultValue('docker')->end()
+                    ->end()
+                ->end()
+                ->arrayNode('kubernetes')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('folder_name')->defaultValue('kubernetes')->end()
+                        ->scalarNode('kubeconfig')->defaultValue('~/.kube/config')->end()
+                        ->scalarNode('namespace')->defaultValue('symfony')->end()
+                        ->arrayNode('registry')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('name')->defaultNull()->end()
+                                ->scalarNode('username')->defaultNull()->end()
+                                ->scalarNode('password')->defaultNull()->end()
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
                 ->arrayNode('composer')

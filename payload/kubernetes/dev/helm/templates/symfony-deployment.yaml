@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: symfony
+    labels:
+        app: symfony
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+spec:
+    replicas: {{ .Values.replicaCount }}
+    selector:
+        matchLabels:
+            service: symfony
+    template:
+        metadata:
+            labels:
+                app: symfony
+                service: symfony
+        spec:
+            imagePullSecrets:
+                - name: image-pull-secret
+            volumes:
+                -
+                    name: public-shared-storage
+                    emptyDir: {}
+                -
+                    name: nginx-configmap
+                    configMap:
+                        name: nginx-configmap
+                -
+                    name: symfony-configmap
+                    configMap:
+                        name: symfony-configmap
+            initContainers:
+                -
+                    name: init-symfony
+                    image: {{ printf "%s/%s:%s" .Values.symfony.image.registry "symfony" .Values.symfony.image.tag | quote }}
+                    imagePullPolicy: {{ .Values.symfony.image.pullPolicy }}
+                    volumeMounts:
+                        -
+                            name: public-shared-storage
+                            mountPath: /symfony/public
+                    # Copy public dir content to shared vol between nginx and symfony
+                    command: ["/bin/sh", "-c", "cp -R /var/www/html/project/symfony/public/* /symfony/public/"]
+            containers:
+                -
+                    name: symfony
+                    image: {{ printf "%s/%s:%s" .Values.symfony.image.registry "symfony" .Values.symfony.image.tag | quote }}
+                    imagePullPolicy: {{ .Values.symfony.image.pullPolicy }}
+                    {{- if (.Values.symfony.env) }}
+                    env:
+                        {{- if (.Values.symfony.env.plain) }}
+                            {{- range $envName, $envValue := .Values.symfony.env.plain }}
+                        -
+                            name: {{ $envName | quote }}
+                            value: {{ $envValue | quote }}
+                            {{- end }}
+                        {{- end }}
+                        {{- if (.Values.symfony.env.secret) }}
+                            {{- range $envName, $secret := .Values.symfony.env.secret }}
+                        -
+                            name: {{ $envName | quote }}
+                            valueFrom:
+                                secretKeyRef:
+                                    name: {{ $secret.name | quote }}
+                                    key: {{ $secret.key | quote }}
+                            {{- end }}
+                        {{- end }}
+                    {{- end }}
+                    volumeMounts:
+                        -
+                            name: public-shared-storage
+                            mountPath: /var/www/html/project/symfony/public
+                        -
+                            name: symfony-configmap
+                            mountPath: /usr/local/etc/php/conf.d/default.ini
+                            subPath: php.ini
+                -
+                    name: nginx
+                    image: {{ printf "%s:%s" .Values.nginx.image.repository .Values.nginx.image.tag | quote }}
+                    imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
+                    volumeMounts:
+                        -
+                            name: public-shared-storage
+                            mountPath: /var/www/html/project/symfony/public
+                        -
+                            name: nginx-configmap
+                            mountPath: /etc/nginx/conf.d/default.conf
+                            subPath: nginx.conf

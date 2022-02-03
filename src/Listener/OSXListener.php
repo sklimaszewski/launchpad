@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Listener;
+namespace Symfony\Launchpad\Listener;
 
-use eZ\Launchpad\Core\Command;
-use eZ\Launchpad\Core\OSX\Optimizer\OptimizerInterface;
 use RuntimeException;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Launchpad\Core\Command;
+use Symfony\Launchpad\Core\OSX\Optimizer\OptimizerInterface;
 
 class OSXListener
 {
@@ -29,7 +29,7 @@ class OSXListener
 
     public function onCommandAction(ConsoleCommandEvent $event): void
     {
-        if (!EZ_ON_OSX) {
+        if (!SF_ON_OSX) {
             return;
         }
         $command = $event->getCommand();

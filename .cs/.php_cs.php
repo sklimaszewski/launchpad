@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-$finder = PhpCsFixer\Finder::create()->in('src');//->in('tests');
+$finder = PhpCsFixer\Finder::create()->in('src');
 
 return PhpCsFixer\Config::create()
                         ->setRules(

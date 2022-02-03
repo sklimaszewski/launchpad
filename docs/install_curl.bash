@@ -2,20 +2,20 @@
 
 # @see: install.bash, this one is a copy/paste to avoid BC break
 
-EZ_HOME="$HOME/.ezlaunchpad"
-mkdir -p $EZ_HOME
-cd $EZ_HOME
+SF_HOME="$HOME/.sflaunchpad"
+mkdir -p $SF_HOME
+cd $SF_HOME
 
-php -r "copy('https://ezsystems.github.io/launchpad/installer', 'installer');"
+php -r "copy('https://sklimaszewski.github.io/launchpad/installer', 'installer');"
 php installer
 rm installer
 
-ln -sf $EZ_HOME/ez.phar $HOME/ez
-chmod +x $HOME/ez
+ln -sf $SF_HOME/sf.phar $HOME/sf
+chmod +x $HOME/sf
 
-echo "You can now use eZ Launchpad by running: ~/ez"
+echo "You can now use Symfony Launchpad by running: ~/sf"
 echo ""
-echo "- You may want to put ~/ez in you PATH"
-echo "- You may want to creat an alias (in your .zshrc or .bashrc) alias ez='~/ez'"
+echo "- You may want to put ~/sf in you PATH"
+echo "- You may want to creat an alias (in your .zshrc or .bashrc) alias sf='~/sf'"
 
-~/ez
+~/sf

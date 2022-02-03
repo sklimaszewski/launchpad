@@ -7,14 +7,14 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Command\Docker;
+namespace Symfony\Launchpad\Command\Docker;
 
-use eZ\Launchpad\Core\DockerCommand;
-use eZ\Launchpad\Core\ProjectStatusDumper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Launchpad\Core\DockerComposeCommand;
+use Symfony\Launchpad\Core\ProjectStatusDumper;
 
-final class Create extends DockerCommand
+final class Create extends DockerComposeCommand
 {
     /**
      * @var ProjectStatusDumper
@@ -37,28 +37,21 @@ final class Create extends DockerCommand
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         parent::initialize($input, $output);
-        $this->projectStatusDumper->setDockerClient($this->dockerClient);
+        $this->projectStatusDumper->setDockerClient($this->dockerComposeClient);
         $this->projectStatusDumper->setIo($this->io);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->dockerClient->build(['--no-cache']);
-        $this->dockerClient->up(['-d']);
+        $this->dockerComposeClient->build(['--no-cache']);
+        $this->dockerComposeClient->up(['-d']);
 
         $this->taskExecutor->composerInstall();
-        $this->taskExecutor->eZCreate();
+        $this->taskExecutor->symfonyCreate();
         $this->taskExecutor->importData();
-
-        // if solr run the index
-        $compose = $this->projectConfiguration->getDockerCompose();
-        if ($compose->hasService('solr')) {
-            $this->taskExecutor->createCore();
-            $this->taskExecutor->indexSolr();
-        }
 
         $this->projectStatusDumper->dump('ncsi');
 
-        return DockerCommand::SUCCESS;
+        return DockerComposeCommand::SUCCESS;
     }
 }

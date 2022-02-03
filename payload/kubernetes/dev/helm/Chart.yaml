@@ -1,0 +1,14 @@
+# Please note this is just a template/skeleton for a Symfony project in kubernetes.
+# Some manual work needs to be done before the deployment (like adding db persistent storage)
+apiVersion: v2
+name: kubernetes-helm
+version: 1.0.0
+#appVersion: "1.16.0"
+description: Symfony Kubernetes Helm Chart
+icon: https://symfony.com/logos/symfony_black_03.png
+type: application
+dependencies:
+    - name: mariadb
+      version: 10.1.*
+      repository: https://charts.bitnami.com/bitnami
+      condition: mariadb.enabled

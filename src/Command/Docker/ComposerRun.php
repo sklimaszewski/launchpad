@@ -7,19 +7,19 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Command\Docker;
+namespace Symfony\Launchpad\Command\Docker;
 
-use eZ\Launchpad\Core\DockerCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Launchpad\Core\DockerComposeCommand;
 
-class ComposerRun extends DockerCommand
+class ComposerRun extends DockerComposeCommand
 {
     protected function configure(): void
     {
         parent::configure();
-        $this->setName('docker:comprun')->setDescription('Run Composer command in the engine.');
+        $this->setName('docker:comprun')->setDescription('Run Composer command in the symfony container.');
         $this->setAliases(['comprun']);
         $this->addArgument(
             'compcommand',
@@ -34,6 +34,6 @@ class ComposerRun extends DockerCommand
         $options = '';
         $this->taskExecutor->runComposerCommand(implode(' ', $allArguments)." {$options}");
 
-        return DockerCommand::SUCCESS;
+        return DockerComposeCommand::SUCCESS;
     }
 }

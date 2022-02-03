@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Core\OSX\Optimizer;
+namespace Symfony\Launchpad\Core\OSX\Optimizer;
 
-use eZ\Launchpad\Core\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Launchpad\Core\Command;
 
 class NFSVolumes extends Optimizer implements OptimizerInterface, NFSAwareInterface
 {

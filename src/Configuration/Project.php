@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Configuration;
+namespace Symfony\Launchpad\Configuration;
 
-use eZ\Launchpad\Core\DockerCompose;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Launchpad\Core\DockerCompose;
 
 class Project
 {
@@ -131,5 +131,10 @@ class Project
             "{$projectPath}/"."{$this->get('provisioning.folder_name')}/".
             "{$this->environment}/{$this->get('docker.compose_filename')}"
         );
+    }
+
+    public function getKubernetesHelmPath(): string
+    {
+        return "{$this->get('kubernetes.folder_name')}/" . "{$this->environment}/helm";
     }
 }

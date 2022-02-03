@@ -7,12 +7,13 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Core;
+namespace Symfony\Launchpad\Core;
 
-use eZ\Launchpad\Configuration\Project as ProjectConfiguration;
 use RuntimeException;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Launchpad\Configuration\Project as ProjectConfiguration;
 
 class ProjectWizard
 {
@@ -27,7 +28,6 @@ class ProjectWizard
     protected $projectConfiguration;
 
     public const INIT_STD = 'standard';
-    public const INIT_STD_COMPOSER_AUTH = 'standard-with-composer-auth';
     public const INIT_EXPERT = 'expert';
 
     /**
@@ -35,7 +35,6 @@ class ProjectWizard
      */
     protected static $modes = [
         self::INIT_STD,
-        self::INIT_STD_COMPOSER_AUTH,
         self::INIT_EXPERT,
     ];
 
@@ -62,25 +61,24 @@ class ProjectWizard
         return [
             $this->getNetworkName(),
             $this->getNetworkTCPPort(),
-            $this->getComposerHttpBasicCredentials(),
             $this->getSelectedServices(
                 $compose->getServices(),
-                ['varnish', 'solr', 'adminer', 'redisadmin']
-            ), $this->getProvisioningFolderName(),
+                ['adminer', 'redisadmin']
+            ),
+            $this->getProvisioningFolderName(),
             $this->getComposeFileName(),
+            $this->getKubernetesConfig(),
         ];
     }
 
     public function getInitializationMode(): string
     {
         $standard = self::INIT_STD;
-        $withComposer = self::INIT_STD_COMPOSER_AUTH;
         $expert = self::INIT_EXPERT;
         $question = <<<END
-eZ Launchpad will install a new architecture for you.
+Symfony Launchpad will install a new architecture for you.
  Three modes are available:
   - <fg=cyan>{$standard}</>: All the services, no composer auth
-  - <fg=cyan>{$withComposer}</>: Standard with ability to provide Composer Auth, useful for eZ Platform or Ibexa
   - <fg=cyan>{$expert}</>: All the questions will be asked and you can select the services you want only
  Please select your <fg=yellow;options=bold>Init</>ialization mode
 END;
@@ -88,46 +86,11 @@ END;
         return $this->io->choice($question, self::$modes, self::INIT_STD);
     }
 
-    protected function getComposerHttpBasicCredentials(): array
-    {
-        if (!$this->requireComposerAuth()) {
-            return [];
-        }
-        $credentials = [];
-        $endString = '<fg=yellow;options=bold>Composer HTTP-BASIC</> for this project?';
-        $questionString = 'Do you want to set '.$endString;
-        while ($this->io->confirm($questionString, self::INIT_STD_COMPOSER_AUTH === $this->mode)) {
-            list($host, $login, $password) = $this->getOneComposerHttpBasic();
-
-            $credentials[] = [$host, $login, $password];
-            $questionString = 'Do you want to add another '.$endString;
-        }
-
-        return $credentials;
-    }
-
-    protected function getOneComposerHttpBasic(): array
-    {
-        $pattern = '^[a-zA-Z0-9\-\.]*$';
-        $validatorHost = function ($value) use ($pattern) {
-            return preg_match("/{$pattern}/", $value);
-        };
-
-        $message = 'What is the <fg=yellow;options=bold>host</> on which you want to add credentials?';
-        $errorMessage = "The host MUST respect {$pattern}.";
-        $default = 'updates.ibexa.co';
-        $host = $this->io->askQuestion($this->getQuestion($message, $default, $validatorHost, $errorMessage));
-        $login = $this->io->askQuestion($this->getQuestion('Login?'));
-        $password = $this->io->askQuestion($this->getQuestion('Password?'));
-
-        return [$host, $login, $password];
-    }
-
     protected function getProvisioningFolderName(): string
     {
         $default = $this->projectConfiguration->get('provisioning.folder_name');
         if (empty($default)) {
-            $default = 'provisioning';
+            $default = 'docker';
         }
 
         if ($this->isStandardMode()) {
@@ -165,6 +128,120 @@ END;
         $errorMessage = "The name of the filename MUST respect {$pattern}.";
 
         return $this->io->askQuestion($this->getQuestion($message, $default, $validator, $errorMessage));
+    }
+
+    public function getKubernetesConfig(): ?array
+    {
+        if ($this->isStandardMode()) {
+            return null;
+        }
+
+        if ($this->io->askQuestion(new ConfirmationQuestion('Do you want to setup Kubernetes config?', false))) {
+            return [
+                'folder_name' => $this->getKubernetesFolderName(),
+                'kubeconfig' => $this->getKubeConfigPath(),
+                'namespace' => $this->getKubernetesNamespace(),
+                'registry' => $this->getContainerRegistry(),
+            ];
+        }
+
+        return null;
+    }
+
+    protected function getKubernetesFolderName(): string
+    {
+        $default = $this->projectConfiguration->get('kubernetes.folder_name');
+        if (empty($default)) {
+            $default = 'kubernetes';
+        }
+
+        if ($this->isStandardMode()) {
+            return $default;
+        }
+        $pattern = '^[a-zA-Z0-9]*$';
+
+        $validator = function ($value) use ($pattern) {
+            return preg_match("/{$pattern}/", $value);
+        };
+
+        $message = 'What is your preferred name for the <fg=yellow;options=bold>kubernetes folder</>?';
+        $errorMessage = "The name of the folder MUST respect {$pattern}.";
+
+        return $this->io->askQuestion($this->getQuestion($message, $default, $validator, $errorMessage));
+    }
+
+    protected function getKubeConfigPath(): string
+    {
+        $default = $this->projectConfiguration->get('kubernetes.kubeconfig');
+        if (empty($default)) {
+            $default = '~/.kube/config';
+        }
+
+        if ($this->isStandardMode()) {
+            return $default;
+        }
+
+        $validator = function ($value) {
+            return file_exists($value);
+        };
+
+        $message = 'What is your preferred name for the <fg=yellow;options=bold>kubernetes folder</>?';
+        $errorMessage = "Please specify correct filepath.";
+
+        return $this->io->askQuestion($this->getQuestion($message, $default, $validator, $errorMessage));
+    }
+
+    protected function getKubernetesNamespace(): string
+    {
+        $default = $this->projectConfiguration->get('kubernetes.namespace');
+        if (empty($default)) {
+            $default = 'symfony';
+        }
+
+        if ($this->isStandardMode()) {
+            return $default;
+        }
+
+        $pattern = '^[a-zA-Z0-9\-]*$';
+
+        $validator = function ($value) use ($pattern) {
+            return preg_match("/{$pattern}/", $value);
+        };
+
+        $message = 'What is your <fg=yellow;options=bold>project namespace</> in Kubernetes cluster?';
+        $errorMessage = "The namespac MUST respect {$pattern}.";
+
+        return $this->io->askQuestion($this->getQuestion($message, $default, $validator, $errorMessage));
+    }
+
+    protected function getContainerRegistry(): array
+    {
+        if ($this->isStandardMode()) {
+            return [
+                'name' => null,
+                'username' => null,
+                'password' => null,
+            ];
+        }
+
+        $default = $this->projectConfiguration->get('kubernetes.registry.name');
+
+        $validator = function ($value) {
+            return substr($value, 0, 4 ) !== 'http' && $value;
+        };
+
+        $message = 'What is your <fg=yellow;options=bold>Container Registry</> used for storing images?';
+        $errorMessage = "The Container Registry cannot start with HTTP(S).";
+
+        $name = $this->io->askQuestion($this->getQuestion($message, $default, $validator, $errorMessage));
+        $username = $this->io->askQuestion($this->getQuestion('What is your registry username?'));
+        $password = $this->io->askQuestion($this->getQuestion('What is your registry password?'));
+
+        return [
+            'name' => $name,
+            'username' => $username,
+            'password' => $password,
+        ];
     }
 
     protected function getSelectedServices(array $services, array $questionnable): array
@@ -208,9 +285,9 @@ END;
     protected function getNetworkTCPPort(): int
     {
         $errno = $errstr = null;
-        $default = 42;
+        $default = 0;
         $validator = function ($value) {
-            if (($value > 0) && ($value <= 64)) {
+            if (($value >= 0) && ($value <= 64)) {
                 $socket = @fsockopen('127.0.0.1', (int) "{$value}080", $errno, $errstr, 5);
                 if ($socket) {
                     fclose($socket);
@@ -229,7 +306,7 @@ END;
         }
 
         $message = 'What is the <fg=yellow;options=bold>TCP Port Prefix</> you want?';
-        $errorMessage = 'The TCP Port Prefix is not correct (already used or not between 1 and 64.';
+        $errorMessage = 'The TCP Port Prefix is not correct (already used or not between 0 and 64).';
 
         return (int) $this->io->askQuestion($this->getQuestion($message, $default, $validator, $errorMessage));
     }
@@ -267,11 +344,5 @@ END;
     protected function requireComposerAuth(): bool
     {
         return self::INIT_STD !== $this->mode;
-    }
-
-    //check if the version is greater than or equal to Ibexa 3.3
-    public function isFullIbexaPackage(): bool
-    {
-        return false !== strpos($this->getMode(), 'ibexa');
     }
 }

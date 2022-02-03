@@ -7,20 +7,20 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Command\Docker;
+namespace Symfony\Launchpad\Command\Docker;
 
-use eZ\Launchpad\Console\Application;
-use eZ\Launchpad\Core\Client\Docker;
-use eZ\Launchpad\Core\Command;
-use eZ\Launchpad\Core\DockerCompose;
-use eZ\Launchpad\Core\ProcessRunner;
-use eZ\Launchpad\Core\ProjectStatusDumper;
-use eZ\Launchpad\Core\ProjectWizard;
-use eZ\Launchpad\Core\TaskExecutor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Launchpad\Console\Application;
+use Symfony\Launchpad\Core\Client\DockerCompose as DockerComposeClient;
+use Symfony\Launchpad\Core\Command;
+use Symfony\Launchpad\Core\DockerCompose;
+use Symfony\Launchpad\Core\ProcessRunner;
+use Symfony\Launchpad\Core\ProjectStatusDumper;
+use Symfony\Launchpad\Core\ProjectWizard;
+use Symfony\Launchpad\Core\TaskExecutor;
 
 class Initialize extends Command
 {
@@ -46,37 +46,20 @@ class Initialize extends Command
         parent::configure();
         $this->setName('docker:initialize')->setDescription('Initialize the project and all the services.');
         $this->setAliases(['docker:init', 'initialize', 'init']);
-        $this->addArgument('repository', InputArgument::OPTIONAL, 'eZ Platform Repository', 'ezsystems/ezplatform');
-        $this->addArgument('version', InputArgument::OPTIONAL, 'eZ Platform Version', '3.*');
+        $this->addArgument('repository', InputArgument::OPTIONAL, 'Symfony Repository', 'symfony/website-skeleton');
+        $this->addArgument('version', InputArgument::OPTIONAL, 'Symfony Version', '5.4');
         $this->addArgument(
             'initialdata',
             InputArgument::OPTIONAL,
-            'Installer: If avaiable uses "composer run-script <initialdata>", if not uses ezplatform:install command',
-            'ezplatform-install'
+            'Installer: If available uses "composer run-script <initialdata>", if not uses symfony:install command',
+            'symfony-install'
         );
     }
 
-    private function isIbexa(InputInterface $input): bool
-    {
-        return false !== strpos($input->getArgument('repository'), 'ibexa');
-    }
-
-    private function getEzPlatformMajorVersion(InputInterface $input): int
+    private function getSymfonyMajorVersion(InputInterface $input): int
     {
         $normalizedVersion = trim($input->getArgument('version'), 'v');
-        $normalizedProvider = explode(
-            '/',
-            $input->hasArgument('repository') ?
-            $input->getArgument('repository') : ''
-        )[0];
-        $normalizedMajorVersion = (int) str_replace(['^', '~'], '', $normalizedVersion);
-        $isNetgenMedia = 'netgen' === $normalizedProvider;
-
-        if ($isNetgenMedia) {
-            ++$normalizedMajorVersion;
-        }
-
-        return $normalizedMajorVersion;
+        return (int) str_replace(['^', '~'], '', $normalizedVersion);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -87,11 +70,11 @@ class Initialize extends Command
         $output->writeln($application->getLogo());
 
         // Get the Payload docker-compose.yml
-        $compose = new DockerCompose("{$this->getPayloadDir()}/dev/docker-compose.yml");
+        $compose = new DockerCompose("{$this->getPayloadDir()}/docker/dev/docker-compose.yml");
         $wizard = new ProjectWizard($this->io, $this->projectConfiguration);
 
         // Ask the questions
-        [$networkName, $networkPort, $httpBasics, $selectedServices, $provisioningName, $composeFileName] = $wizard(
+        [$networkName, $networkPort, $selectedServices, $provisioningName, $composeFileName, $kubernetesConfig] = $wizard(
             $compose
         );
 
@@ -100,95 +83,70 @@ class Initialize extends Command
         // start the scafolding of the Payload
         $provisioningFolder = "{$this->projectPath}/{$provisioningName}";
         $fs->mkdir("{$provisioningFolder}/dev");
-        $fs->mirror("{$this->getPayloadDir()}/dev", "{$provisioningFolder}/dev");
+        $fs->mirror("{$this->getPayloadDir()}/docker/dev", "{$provisioningFolder}/dev");
         $fs->chmod(
             [
                 "{$provisioningFolder}/dev/nginx/entrypoint.bash",
-                "{$provisioningFolder}/dev/engine/entrypoint.bash",
-                "{$provisioningFolder}/dev/solr/entrypoint.bash",
+                "{$provisioningFolder}/dev/symfony/entrypoint.bash",
             ],
             0755
         );
 
+        // kubernetes
+        if ($kubernetesConfig) {
+            $kubernetesFolderFolder = "{$this->projectPath}/{$kubernetesConfig['folder_name']}";
+            $fs->mkdir($kubernetesFolderFolder);
+            $fs->mirror("{$this->getPayloadDir()}/kubernetes", $kubernetesFolderFolder);
+        }
+
         unset($selectedServices);
 
-        $eZMajorVersion = $this->getEzPlatformMajorVersion($input);
+        $majorVersion = $this->getSymfonyMajorVersion($input);
 
-        // eZ Platform 1.x specific versions
-        if (1 === $eZMajorVersion) {
+        // Symfony 2.x specific versions
+        if (2 === $majorVersion) {
             // PHP 7.2
-            $enginDockerFilePath = "{$provisioningFolder}/dev/engine/Dockerfile";
-            $engineDockerFileContent = file_get_contents($enginDockerFilePath);
+            $symfonyDockerFilePath = "{$provisioningFolder}/dev/engine/Dockerfile";
+            $symfonyDockerFileContent = file_get_contents($symfonyDockerFilePath);
             file_put_contents(
-                $enginDockerFilePath,
+                $symfonyDockerFilePath,
                 str_replace(
-                    'docker-php-ez-engine:7.4',
-                    'docker-php-ez-engine:7.2',
-                    $engineDockerFileContent
+                    'php-symfony:7.4-fpm-mysql',
+                    'php-symfony:7.2-fpm-mysql',
+                    $symfonyDockerFileContent
                 )
             );
         }
 
-        // eZ Platform 2.x specific versions
-        if (2 === $eZMajorVersion) {
+        // Symfony 3.x specific versions
+        if (3 === $majorVersion) {
             // PHP 7.3
-            $enginDockerFilePath = "{$provisioningFolder}/dev/engine/Dockerfile";
-            $engineDockerFileContent = file_get_contents($enginDockerFilePath);
+            $symfonyDockerFilePath = "{$provisioningFolder}/dev/engine/Dockerfile";
+            $symfonyDockerFileContent = file_get_contents($symfonyDockerFilePath);
             file_put_contents(
-                $enginDockerFilePath,
+                $symfonyDockerFilePath,
                 str_replace(
-                    'docker-php-ez-engine:7.4',
-                    'docker-php-ez-engine:7.3',
-                    $engineDockerFileContent
+                    'php-symfony:7.4-fpm-mysql',
+                    'php-symfony:7.3-fpm-mysql',
+                    $symfonyDockerFileContent
                 )
             );
         }
 
-        // eZ Platform < 3 has another vhost
-        if ($eZMajorVersion < 3) {
-            rename("{$provisioningFolder}/dev/nginx/nginx_v2.conf", "{$provisioningFolder}/dev/nginx/nginx.conf");
-        }
-
-        // eZ Platform < 3 only support solr 6. Replace unsupported solr 7.7 by 6.6.2
-        if ($compose->hasService('solr') && ($eZMajorVersion < 3)) {
-            $composeFilePath = "{$provisioningFolder}/dev/{$composeFileName}";
-            $compose->dump($composeFilePath);
-            $composeFileContent = file_get_contents($composeFilePath);
-            file_put_contents(
-                $composeFilePath,
-                str_replace(
-                    'solr:7.7',
-                    'solr:6.6.2',
-                    $composeFileContent
-                )
-            );
-            $compose = new DockerCompose($composeFilePath);
-        }
-
-        // no need for v2 nginx on v3
-        if ($eZMajorVersion >= 3) {
-            unlink("{$provisioningFolder}/dev/nginx/nginx_v2.conf");
-        }
-
-        // Ibexa >= 3.3.x , update composer to v2
-        if ($this->isIbexa($input)) {
-            $engineEntryPointPath = "{$provisioningFolder}/dev/engine/entrypoint.bash";
-            $engineEntryPointContent = file_get_contents($engineEntryPointPath);
-            file_put_contents(
-                $engineEntryPointPath,
-                str_replace(
-                    'self-update --1',
-                    'self-update --2',
-                    $engineEntryPointContent
-                )
-            );
+        // Symfony <= 3 has another vhost
+        if ($majorVersion <= 3) {
+            rename("{$provisioningFolder}/dev/nginx/nginx_v3.conf", "{$provisioningFolder}/dev/nginx/nginx.conf");
+        } else {
+            // no need for v3 nginx config
+            unlink("{$provisioningFolder}/dev/nginx/nginx_v3.conf");
         }
 
         // Clean the Compose File
-        $compose->removeUselessEnvironmentsVariables();
+        $compose->removeUselessEnvironmentsVariables($majorVersion);
 
-        // Get the Payload README.md
-        $fs->copy("{$this->getPayloadDir()}/README.md", "{$provisioningFolder}/README.md");
+        // Get the Payload README.md & .dockerignore
+        $fs->copy("{$this->getPayloadDir()}/docker/README.md", "{$provisioningFolder}/README.md");
+        $fs->copy("{$this->getPayloadDir()}/docker/.dockerignore", "{$provisioningFolder}/.dockerignore");
 
         // create the local configurations
         $localConfigurations = [
@@ -197,12 +155,15 @@ class Initialize extends Command
             'docker.network_name' => $networkName,
             'docker.network_prefix_port' => $networkPort,
         ];
-
-        foreach ($httpBasics as $name => $httpBasic) {
-            [$host, $user, $pass] = $httpBasic;
-            $localConfigurations["composer.http_basic.{$name}.host"] = $host;
-            $localConfigurations["composer.http_basic.{$name}.login"] = $user;
-            $localConfigurations["composer.http_basic.{$name}.password"] = $pass;
+        if ($kubernetesConfig) {
+            $localConfigurations = array_merge($localConfigurations, [
+                'kubernetes.folder_name' => $kubernetesConfig['folder_name'],
+                'kubernetes.kubeconfig' => $kubernetesConfig['kubeconfig'],
+                'kubernetes.registry.name' => $kubernetesConfig['registry']['name'],
+                'kubernetes.registry.username' => $kubernetesConfig['registry']['username'],
+                'kubernetes.registry.password' => $kubernetesConfig['registry']['password'],
+                'kubernetes.namespace' => $kubernetesConfig['namespace'],
+            ]);
         }
 
         $this->projectConfiguration->setMultiLocal($localConfigurations);
@@ -217,7 +178,7 @@ class Initialize extends Command
             'host-machine-mapping' => $this->projectConfiguration->get('docker.host_machine_mapping'),
             'composer-cache-dir' => $this->projectConfiguration->get('docker.host_composer_cache_dir'),
         ];
-        $dockerClient = new Docker($options, new ProcessRunner(), $this->optimizer);
+        $dockerClient = new DockerComposeClient($options, new ProcessRunner(), $this->optimizer);
         $this->projectStatusDumper->setDockerClient($dockerClient);
 
         // do the real work
@@ -228,15 +189,6 @@ class Initialize extends Command
             $input
         );
 
-        // remove unused solr
-        if (!$compose->hasService('solr')) {
-            $fs->remove("{$provisioningFolder}/dev/solr");
-        }
-        // remove unused varnish
-        if (!$compose->hasService('varnish')) {
-            $fs->remove("{$provisioningFolder}/dev/varnish");
-        }
-
         $this->projectConfiguration->setEnvironment('dev');
         $this->projectStatusDumper->dump('ncsi');
 
@@ -244,7 +196,7 @@ class Initialize extends Command
     }
 
     protected function innerInitialize(
-        Docker $dockerClient,
+        DockerComposeClient $dockerClient,
         DockerCompose $compose,
         string $composeFilePath,
         InputInterface $input
@@ -255,46 +207,23 @@ class Initialize extends Command
         $tempCompose->dump($composeFilePath);
         unset($tempCompose);
 
-        // Do the first pass to get eZ Platform and related files
+        // Do the first pass to get Symfony and related files
         $dockerClient->build(['--no-cache']);
         $dockerClient->up(['-d']);
 
         $executor = new TaskExecutor($dockerClient, $this->projectConfiguration, $this->requiredRecipes);
         $executor->composerInstall();
 
-        // Fix #7
-        // if eZ EE is selected then the DB is not selected by the install process
-        // we have to do it manually here
         $repository = $input->getArgument('repository');
         $initialdata = $input->getArgument('initialdata');
 
         $normalizedVersion = trim($input->getArgument('version'), 'v');
-        // Change default when on eZ Platform v1 to "clean" / "ezplatform-ee-clean"
-        if ('ezplatform-install' === $initialdata && 1 === (int) str_replace(['^', '~'], '', $normalizedVersion)) {
-            $initialdata = (false !== strpos($repository, 'ezplatform-ee') ? 'ezplatform-ee-clean' : 'clean');
-        }
 
-        if (!$this->isIbexa($input)) {
-            $executor->eZInstall($normalizedVersion, $repository, $initialdata);
-        } else {
-            // for sure it is wrong with ibexa/* so we change it by defaultc
-            if ('ezplatform-install' === $initialdata) {
-                $initialdata = str_replace('/', '-', $repository);
-            }
-            $executor->ibexaInstall($normalizedVersion, $repository, $initialdata);
-        }
+        $executor->symfonyInstall($normalizedVersion, $repository, $initialdata);
 
-        if ($compose->hasService('solr')) {
-            $executor->eZInstallSolr();
-        }
         $compose->dump($composeFilePath);
 
         $dockerClient->up(['-d']);
         $executor->composerInstall();
-
-        if ($compose->hasService('solr')) {
-            $executor->createCore();
-            $executor->indexSolr();
-        }
     }
 }

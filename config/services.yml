@@ -1,6 +1,7 @@
 ---
 parameters:
-    github_release_url: "https://api.github.com/repos/ezsystems/launchpad/releases?draft=false&prerelease=false"
+    # TODO: Replace
+    github_release_url: "https://api.github.com/repos/sklimaszewski/launchpad/releases?draft=false&prerelease=false"
 
 services:
 
@@ -8,36 +9,36 @@ services:
         autowire: true
         public:  true
 
-    eZ\Launchpad\Listener\ApplicationUpdate:
+    Symfony\Launchpad\Listener\ApplicationUpdate:
         arguments:
             - {release_url: "%github_release_url%"}
         tags:
             - { name: kernel.event_listener, event: console.command, method: onCommandAction }
 
-    eZ\Launchpad\Listener\CommandException:
+    Symfony\Launchpad\Listener\CommandException:
         tags:
             - { name: kernel.event_listener, event: console.error, method: onExceptionAction }
 
-    eZ\Launchpad\Listener\CommandStart:
+    Symfony\Launchpad\Listener\CommandStart:
         tags:
             - { name: kernel.event_listener, event: console.command, method: onCommandAction }
 
 
-    eZ\Launchpad\Listener\CommandTerminate:
+    Symfony\Launchpad\Listener\CommandTerminate:
         tags:
             - { name: kernel.event_listener, event: console.terminate, method: onTerminateAction }
 
-    eZ\Launchpad\Core\ProjectStatusDumper: ~
+    Symfony\Launchpad\Core\ProjectStatusDumper: ~
 
-    eZ\Launchpad\Listener\OSXListener:
+    Symfony\Launchpad\Listener\OSXListener:
         class:
-        arguments: [!tagged ezlaunchpad.osx.optimizer]
+        arguments: [!tagged sflaunchpad.osx.optimizer]
         tags:
             - { name: kernel.event_listener, event: console.command, method: onCommandAction }
 
     # OSX OPTIMIZER
-    eZ\Launchpad\Core\OSX\Optimizer\D4M:
-        tags: [ezlaunchpad.osx.optimizer]
+    Symfony\Launchpad\Core\OSX\Optimizer\D4M:
+        tags: [sflaunchpad.osx.optimizer]
 
-    eZ\Launchpad\Core\OSX\Optimizer\NFSVolumes:
-        tags: [ezlaunchpad.osx.optimizer]
+    Symfony\Launchpad\Core\OSX\Optimizer\NFSVolumes:
+        tags: [sflaunchpad.osx.optimizer]

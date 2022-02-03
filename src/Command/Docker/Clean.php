@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Command\Docker;
+namespace Symfony\Launchpad\Command\Docker;
 
-use eZ\Launchpad\Core\DockerCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Launchpad\Core\DockerComposeCommand;
 
-final class Clean extends DockerCommand
+final class Clean extends DockerComposeCommand
 {
     protected function configure(): void
     {
@@ -24,8 +24,8 @@ final class Clean extends DockerCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->dockerClient->down(['-v', '--remove-orphans']);
+        $this->dockerComposeClient->down(['-v', '--remove-orphans']);
 
-        return DockerCommand::SUCCESS;
+        return DockerComposeCommand::SUCCESS;
     }
 }

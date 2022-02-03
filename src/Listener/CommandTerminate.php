@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Listener;
+namespace Symfony\Launchpad\Listener;
 
-use eZ\Launchpad\Core\Command;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Launchpad\Core\Command;
 
 final class CommandTerminate
 {

@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+/**
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
+ * @license   For full copyright and license information view LICENSE file distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+use Symfony\Launchpad\Console\ApplicationFactory;
+
+require __DIR__.'/../src/bootstrap.php';
+
+error_reporting(getenv("DISPLAY_ERRORS") !== false ? E_ALL : 0);
+
+ApplicationFactory::create()->run();

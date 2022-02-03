@@ -7,14 +7,14 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Command\Docker;
+namespace Symfony\Launchpad\Command\Docker;
 
-use eZ\Launchpad\Core\DockerCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Launchpad\Core\DockerComposeCommand;
 
-final class Update extends DockerCommand
+final class Update extends DockerComposeCommand
 {
     protected function configure(): void
     {
@@ -25,11 +25,11 @@ final class Update extends DockerCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->dockerClient->pull(['--ignore-pull-failures'], $input->getArgument('service'));
-        $this->dockerClient->build([], $input->getArgument('service'));
-        $this->dockerClient->up(['-d'], $input->getArgument('service'));
+        $this->dockerComposeClient->pull(['--ignore-pull-failures'], $input->getArgument('service'));
+        $this->dockerComposeClient->build([], $input->getArgument('service'));
+        $this->dockerComposeClient->up(['-d'], $input->getArgument('service'));
         $this->taskExecutor->composerInstall();
 
-        return DockerCommand::SUCCESS;
+        return DockerComposeCommand::SUCCESS;
     }
 }

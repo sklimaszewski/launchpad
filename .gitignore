@@ -1,7 +1,7 @@
 /composer.phar
 /box.phar
-/ez.phar
-/ez.phar.*
+/sf.phar
+/sf.phar.*
 /vendor/
 .php~
 .idea
@@ -12,30 +12,24 @@
 ~*
 .php_cs.cache
 
-tests/coverage
-tests/.phpunit.result.cache
-
 # Auto-update
-/docs/ez-old.phar
+/docs/sf-old.phar
 
 # Tests
-/provisioning
-/ezplatform
-/.ezlaunchpad.yml
+.dockerignore
+/docker
+/kubernetes
+/symfony
+/.sflaunchpad.yml
 
 # CI stuff
 /build-key.pem
-/ezlaunchpad-private.pem
+/sflaunchpad-private.pem
 /secrets.tar
 /plantuml.jar
 
 # others
-/provisioning2ouf
-/provisioning2
 /data
 
-# we do not want that at the root (usually generated when developing eZ Launchpad)
-/ez_install.bash
-/composer_install.bash
-/ez_install_solr.bash
-
+# we do not want that at the root (usually generated when developing Symfony Launchpad)
+/*.bash

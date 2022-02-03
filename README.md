@@ -1,14 +1,24 @@
-# eZ Launchpad
+# Symfony Launchpad
 
-eZ Launchpad is a CLI tool to start an eZ Platform project in 5 min on top of a full Docker stack.
+Symfony Launchpad is a CLI tool to start a Symfony project in 5 min on top of a full Docker stack.
 
-It's brought to you by, and supported by the eZ Community _(on ezcommunity.slack.com #ez-launchpad)_.
+It is fully based on eZ Launchpad created for eZ Platform / Ibexa installations.
 
-You can find the full documentation here: https://ezsystems.github.io/launchpad
+You can find the full documentation here: https://sklimaszewski.github.io/launchpad
 
-| Branch   | Travis build status |
-|:--------:|:-------------------:|
-| master   | [![Build Status](https://travis-ci.org/ezsystems/launchpad.svg?branch=master)](https://travis-ci.org/ezsystems/launchpad)
+## Changes added to the base eZ Launchpad
+
+- [x] Allow for DATABASE_URL env variable usage
+- [x] Removed Ibexa-specific functionalities/code
+- [x] Platform.sh support replaced with K8S tools
+- [x] Reduce main engine docker image size and build time
+
+## Possible future improvements
+
+- [ ] Dump/import databases from db container instead of symfony
+- [ ] Setup xdebug configuration
+- [ ] Allow for postgresql database
+- [ ] Bring back testing
 
 ## Contribution
 

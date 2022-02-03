@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Listener;
+namespace Symfony\Launchpad\Listener;
 
-use eZ\Launchpad\Core\Command;
-use eZ\Launchpad\Core\DockerCommand;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Launchpad\Core\Command;
+use Symfony\Launchpad\Core\DockerCommand;
 
 final class CommandStart
 {

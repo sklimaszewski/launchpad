@@ -7,14 +7,14 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Console;
+namespace Symfony\Launchpad\Console;
 
-use eZ\Launchpad\Console;
-use eZ\Launchpad\DependencyInjection\CommandPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
+use Symfony\Launchpad\Console;
+use Symfony\Launchpad\DependencyInjection\CommandPass;
 
 class ApplicationFactory
 {
@@ -23,8 +23,8 @@ class ApplicationFactory
         string $env = 'prod',
         string $operatingSystem = PHP_OS
     ): Application {
-        \define('EZ_HOME', getenv('HOME').'/.ezlaunchpad');
-        \define('EZ_ON_OSX', 'Darwin' === $operatingSystem);
+        \define('SF_HOME', getenv('HOME').'/.sflaunchpad');
+        \define('SF_ON_OSX', 'Darwin' === $operatingSystem);
         $container = new ContainerBuilder();
         $container->addCompilerPass(new CommandPass($env));
         $container->addCompilerPass(new RegisterListenersPass());
@@ -34,7 +34,7 @@ class ApplicationFactory
         $application = new Console\Application();
         $application->setContainer($container);
         $application->setEnv($env);
-        $application->setName('eZ Launchpad');
+        $application->setName('Symfony Launchpad');
         $application->setVersion('@package_version@'.(('prod' !== $env) ? '-dev' : ''));
         $application->setAutoExit($autoExit);
 

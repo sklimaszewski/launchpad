@@ -17,7 +17,7 @@ echo ""
 if [ ! -f /usr/local/bin/composer ];
 then
     echo "WARNING: you don't have the last image of the PHP ENGINE"
-    echo "TO FIX RUN: ~/ez docker:update"
+    echo "TO FIX RUN: ~/sf docker:update"
 fi
 
 /usr/local/bin/composer self-update > /dev/null 2>&1

@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Core;
+namespace Symfony\Launchpad\Core;
 
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;

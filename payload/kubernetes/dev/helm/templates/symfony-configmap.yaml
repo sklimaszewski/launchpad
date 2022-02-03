@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: symfony-configmap
+    labels:
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+data:
+    php.ini: |-
+{{ .Files.Get "config/symfony/php.ini" | indent 8 }}

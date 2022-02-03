@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Listener;
+namespace Symfony\Launchpad\Listener;
 
 use Symfony\Component\Console\Event\ConsoleErrorEvent;
 

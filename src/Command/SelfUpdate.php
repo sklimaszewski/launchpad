@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Command;
+namespace Symfony\Launchpad\Command;
 
-use eZ\Launchpad\Console\Application;
-use eZ\Launchpad\Core\Command;
 use Phar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Launchpad\Console\Application;
+use Symfony\Launchpad\Core\Command;
 
 class SelfUpdate extends Command
 {
@@ -56,10 +56,10 @@ class SelfUpdate extends Command
 
         $localPharFile = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
         $localPharDir = \dirname($localPharFile);
-        $backPharFile = $localPharDir.'/ez.phar.backup';
+        $backPharFile = $localPharDir.'/sf.phar.backup';
         copy($localPharFile, $backPharFile);
         $assetUrl = $release->assets[0]->browser_download_url;
-        $tempPharFile = $localPharDir.'/ez.phar.temp';
+        $tempPharFile = $localPharDir.'/sf.phar.temp';
         file_put_contents($tempPharFile, githubFetch($assetUrl, false));
         copy($localPharFile.'.pubkey', $tempPharFile.'.pubkey');
 

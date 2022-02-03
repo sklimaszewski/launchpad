@@ -5,7 +5,7 @@
  * @license   For full copyright and license information view LICENSE file distributed with this source code.
  */
 
-namespace eZ\Launchpad\Core;
+namespace Symfony\Launchpad\Core;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
@@ -55,16 +55,11 @@ class DockerCompose
     {
         $services = [];
         foreach ($this->getServices() as $name => $service) {
-            // Solr is not managed here
-            if ('solr' === $name) {
-                continue;
-            }
-
             if (isset($service['volumes'])) {
                 $volumes = NovaCollection($service['volumes']);
                 $service['volumes'] = $volumes->prune(
                     function ($value) {
-                        return false === strpos($value, 'ezplatform');
+                        return false === strpos($value, 'symfony');
                     }
                 )->toArray();
             }
@@ -78,7 +73,7 @@ class DockerCompose
         $services = [];
         foreach ($this->getServices() as $name => $service) {
             // we don't need anything else for the init
-            if (!\in_array($name, ['engine', 'db'])) {
+            if (!\in_array($name, ['symfony', 'db'])) {
                 continue;
             }
 
@@ -86,7 +81,7 @@ class DockerCompose
                 $volumes = NovaCollection($service['volumes']);
                 $service['volumes'] = $volumes->prune(
                     function ($value) {
-                        return false === strpos($value, 'ezplatform');
+                        return false === strpos($value, 'symfony');
                     }
                 )->toArray();
             }
@@ -101,7 +96,6 @@ class DockerCompose
                             'CACHE_POOL',
                             'CACHE_DSN',
                             'SEARCH_ENGINE',
-                            'SOLR_DSN',
                             'HTTPCACHE_PURGE_SERVER',
                             'SYMFONY_TMP_DIR',
                         ];
@@ -118,19 +112,14 @@ class DockerCompose
         $this->compose['services'] = $services;
     }
 
-    public function removeUselessEnvironmentsVariables(): void
+    public function removeUselessEnvironmentsVariables(int $majorVersion): void
     {
         $services = [];
         foreach ($this->getServices() as $name => $service) {
             if (isset($service['environment'])) {
                 $environnementVars = NovaCollection($service['environment']);
                 $service['environment'] = $environnementVars->prune(
-                    function ($value) {
-                        if (!$this->hasService('solr')) {
-                            if (preg_match('/(SEARCH_ENGINE|SOLR_DSN)/', $value)) {
-                                return false;
-                            }
-                        }
+                    function ($value) use ($majorVersion) {
                         if (!$this->hasService('redis')) {
                             if (
                                 preg_match(
@@ -141,8 +130,18 @@ class DockerCompose
                                 return false;
                             }
                         }
-                        if (!$this->hasService('varnish')) {
-                            if (preg_match('/(HTTPCACHE_PURGE_SERVER)/', $value)) {
+
+                        if ($majorVersion <= 3) {
+                            if (preg_match('/(DATABASE_URL|MAILER_DSN)/', $value)) {
+                                return false;
+                            }
+                        } else {
+                            if (
+                                preg_match(
+                                    '/(DATABASE_PLATFORM|DATABASE_DRIVER|DATABASE_USER|DATABASE_NAME|DATABASE_PASSWORD|DATABASE_HOST|MAILER_TRANSPORT|MAILER_HOST|MAILER_PORT)/',
+                                    $value
+                                )
+                            ) {
                                 return false;
                             }
                         }

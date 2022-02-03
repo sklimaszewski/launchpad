@@ -7,20 +7,20 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Core;
+namespace Symfony\Launchpad\Core;
 
-use eZ\Launchpad\Configuration\Project as ProjectConfiguration;
-use eZ\Launchpad\Core\Client\Docker as DockerClient;
 use Novactive\Collection\Collection;
 use RuntimeException;
 use Symfony\Component\Process\Process;
+use Symfony\Launchpad\Configuration\Project as ProjectConfiguration;
+use Symfony\Launchpad\Core\Client\DockerCompose as DockerComposeClient;
 
 class TaskExecutor
 {
     /**
-     * @var DockerClient
+     * @var DockerComposeClient
      */
-    protected $dockerClient;
+    protected $dockerComposeClient;
 
     /**
      * @var ProjectConfiguration
@@ -38,12 +38,12 @@ class TaskExecutor
     protected $dockerEnvVars;
 
     public function __construct(
-        DockerClient $dockerClient,
+        DockerComposeClient $dockerComposeClient,
         ProjectConfiguration $configuration,
         Collection $recipes,
         array $dockerEnvVars = []
     ) {
-        $this->dockerClient = $dockerClient;
+        $this->dockerComposeClient = $dockerComposeClient;
         $this->projectConfiguration = $configuration;
         $this->recipes = $recipes;
         $this->dockerEnvVars = $dockerEnvVars;
@@ -97,59 +97,17 @@ class TaskExecutor
         return $processes;
     }
 
-    public function eZInstall(string $version, string $repository, string $initialData): Process
+    public function symfonyInstall(string $version, string $repository, string $initialData): Process
     {
-        $recipe = 'ez_install';
+        $recipe = 'sf_install';
         $this->checkRecipeAvailability($recipe);
 
         return $this->execute("{$recipe}.bash {$repository} {$version} {$initialData}");
     }
 
-    public function ibexaInstall(string $version, string $repository, string $initialData): Process
+    public function symfonyCreate(): Process
     {
-        $recipe = 'ibexa_install';
-        $this->checkRecipeAvailability($recipe);
-
-        return $this->execute("{$recipe}.bash {$repository} {$version} {$initialData}");
-    }
-
-    public function eZInstallSolr(): Process
-    {
-        $recipe = 'ez_install_solr';
-        $this->checkRecipeAvailability($recipe);
-
-        return $this->execute(
-            "{$recipe}.bash {$this->projectConfiguration->get('provisioning.folder_name')} COMPOSER_INSTALL"
-        );
-    }
-
-    public function indexSolr(): Process
-    {
-        $recipe = 'ez_install_solr';
-        $this->checkRecipeAvailability($recipe);
-
-        return $this->execute(
-            "{$recipe}.bash {$this->projectConfiguration->get('provisioning.folder_name')} INDEX"
-        );
-    }
-
-    public function createCore(): Process
-    {
-        $recipe = 'ez_install_solr';
-        $this->checkRecipeAvailability($recipe);
-
-        $provisioningFolder = $this->projectConfiguration->get('provisioning.folder_name');
-
-        return $this->execute(
-            "{$recipe}.bash {$provisioningFolder} CREATE_CORE",
-            'solr',
-            'solr'
-        );
-    }
-
-    public function eZCreate(): Process
-    {
-        $recipe = 'ez_create';
+        $recipe = 'sf_create';
         $this->checkRecipeAvailability($recipe);
 
         return $this->execute("{$recipe}.bash");
@@ -160,7 +118,12 @@ class TaskExecutor
         $recipe = 'create_dump';
         $this->checkRecipeAvailability($recipe);
 
-        return $this->execute("{$recipe}.bash");
+        $args = [];
+        foreach ($this->projectConfiguration->get('docker.storage_dirs') as $name => $path) {
+            $args[] = $name . '=' . trim($path, '/');
+        }
+
+        return $this->execute("{$recipe}.bash " . implode(' ', $args));
     }
 
     public function importData(): Process
@@ -168,32 +131,37 @@ class TaskExecutor
         $recipe = 'import_dump';
         $this->checkRecipeAvailability($recipe);
 
-        return $this->execute("{$recipe}.bash");
+        $args = [];
+        foreach ($this->projectConfiguration->get('docker.storage_dirs') as $name => $path) {
+            $args[] = $name . '=' . trim($path, '/');
+        }
+
+        return $this->execute("{$recipe}.bash" . implode(' ', $args));
     }
 
     public function runSymfomyCommand(string $arguments): Process
     {
-        $consolePath = $this->dockerClient->isEzPlatform2x() ? 'bin/console' : 'app/console';
+        $consolePath = $this->dockerComposeClient->isSymfony2x() ? 'bin/console' : 'app/console';
 
-        return $this->execute("ezplatform/{$consolePath} {$arguments}");
+        return $this->execute("symfony/{$consolePath} {$arguments}");
     }
 
     public function runComposerCommand(string $arguments): Process
     {
         return $this->globalExecute(
-            '/usr/local/bin/composer --working-dir='.$this->dockerClient->getProjectPathContainer().'/ezplatform '.
+            '/usr/local/bin/composer --working-dir='.$this->dockerComposeClient->getProjectPathContainer().'/symfony '.
             $arguments
         );
     }
 
-    protected function execute(string $command, string $user = 'www-data', string $service = 'engine')
+    protected function execute(string $command, string $user = 'www-data', string $service = 'symfony')
     {
-        $command = $this->dockerClient->getProjectPathContainer().'/'.$command;
+        $command = $this->dockerComposeClient->getProjectPathContainer().'/'.$command;
 
         return $this->globalExecute($command, $user, $service);
     }
 
-    protected function globalExecute(string $command, string $user = 'www-data', string $service = 'engine')
+    protected function globalExecute(string $command, string $user = 'www-data', string $service = 'symfony')
     {
         $args = ['--user', $user];
 
@@ -201,6 +169,6 @@ class TaskExecutor
             $args = array_merge($args, ['--env', $envVar]);
         }
 
-        return $this->dockerClient->exec($command, $args, $service);
+        return $this->dockerComposeClient->exec($command, $args, $service);
     }
 }

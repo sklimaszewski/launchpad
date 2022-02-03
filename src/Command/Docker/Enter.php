@@ -7,21 +7,21 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Command\Docker;
+namespace Symfony\Launchpad\Command\Docker;
 
-use eZ\Launchpad\Core\DockerCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Launchpad\Core\DockerComposeCommand;
 
-final class Enter extends DockerCommand
+final class Enter extends DockerComposeCommand
 {
     protected function configure(): void
     {
         parent::configure();
         $this->setName('docker:enter')->setDescription('Enter in a container.');
-        $this->addArgument('service', InputArgument::OPTIONAL, 'Service to enter in', 'engine');
+        $this->addArgument('service', InputArgument::OPTIONAL, 'Service to enter in', 'symfony');
         $this->addOption('user', 'u', InputOption::VALUE_REQUIRED, 'User with who to enter in', 'www-data');
         $this->addArgument('shell', InputArgument::OPTIONAL, 'Command to enter in', '/bin/bash');
         $this->setAliases(['enter', 'docker:exec', 'exec']);
@@ -29,7 +29,7 @@ final class Enter extends DockerCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->dockerClient->exec(
+        $this->dockerComposeClient->exec(
             $input->getArgument('shell'),
             [
                 '--user', $input->getOption('user'),
@@ -37,6 +37,6 @@ final class Enter extends DockerCommand
             $input->getArgument('service')
         );
 
-        return DockerCommand::SUCCESS;
+        return DockerComposeCommand::SUCCESS;
     }
 }

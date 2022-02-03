@@ -7,14 +7,14 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Listener;
+namespace Symfony\Launchpad\Listener;
 
 use Carbon\Carbon;
-use eZ\Launchpad\Configuration\Project as ProjectConfiguration;
 use Symfony\Component\Console\Command\Command as BaseCommand;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Launchpad\Configuration\Project as ProjectConfiguration;
 
 final class ApplicationUpdate
 {
@@ -46,7 +46,7 @@ final class ApplicationUpdate
 
         $authorized = [
             'list', 'help', 'test', 'docker:initialize:skeleton',
-            'docker:initialize_ibexa', 'docker:initialize', 'docker:create',
+            'docker:initialize', 'docker:create',
             'self-update', 'rollback',
         ];
         if (!\in_array($command->getName(), $authorized)) {
@@ -64,7 +64,7 @@ final class ApplicationUpdate
             );
 
             if (!$fs->exists($dockerComposeFileFolder."/{$dockerComposeFileName}")) {
-                $io->error('Your are not in a folder managed by eZ Launchpad.');
+                $io->error('Your are not in a folder managed by Symfony Launchpad.');
                 $event->disableCommand();
                 $event->stopPropagation();
 
@@ -89,17 +89,18 @@ final class ApplicationUpdate
 
         $releaseUrl = $this->parameters['release_url'];
         $releases = githubFetch($releaseUrl);
-        if (null === $releases) {
+        if (!$releases) {
             $io->comment('Cannot find new releases, please try later.');
 
             return;
         }
+
         $release = $releases[0];
         $currentVersion = normalizeVersion($command->getApplication()->getVersion());
         $lastVersion = normalizeVersion($release->tag_name);
 
         if ($lastVersion > $currentVersion) {
-            $io->note('A new version of eZ Launchpad is available, please run self-update.');
+            $io->note('A new version of Symfony Launchpad is available, please run self-update.');
             sleep(2);
         }
 

@@ -7,14 +7,14 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Command\Docker;
+namespace Symfony\Launchpad\Command\Docker;
 
-use eZ\Launchpad\Core\DockerCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Launchpad\Core\DockerComposeCommand;
 
-final class Logs extends DockerCommand
+final class Logs extends DockerComposeCommand
 {
     protected function configure(): void
     {
@@ -26,8 +26,8 @@ final class Logs extends DockerCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->dockerClient->logs(['-f', '--tail=100'], $input->getArgument('service'));
+        $this->dockerComposeClient->logs(['-f', '--tail=100'], $input->getArgument('service'));
 
-        return DockerCommand::SUCCESS;
+        return DockerComposeCommand::SUCCESS;
     }
 }

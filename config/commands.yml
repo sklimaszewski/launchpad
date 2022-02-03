@@ -6,61 +6,62 @@ services:
         public: true
 
     _instanceof:
-        eZ\Launchpad\Core\Command:
-            tags: [ezlaunchpad.command]
+        Symfony\Launchpad\Core\Command:
+            tags: [sflaunchpad.command]
 
     # Not working in a Phar (method glob() is used but it is not working in a phar)
-    #eZ\Launchpad\Command\:
+    #Symfony\Launchpad\Command\:
     #    resource: ../src/Command/*
 
     # then we need to list them manually
-    eZ\Launchpad\Command\Rollback: ~
-    eZ\Launchpad\Command\Docker\Start: ~
-    eZ\Launchpad\Command\Docker\Stop: ~
-    eZ\Launchpad\Command\Docker\Up: ~
-    eZ\Launchpad\Command\Docker\Clean: ~
-    eZ\Launchpad\Command\Docker\Status: ~
-    eZ\Launchpad\Command\Docker\Enter: ~
-    eZ\Launchpad\Command\Docker\Logs: ~
-    eZ\Launchpad\Command\Docker\SymfonyRun: ~
-    eZ\Launchpad\Command\Docker\ComposerRun: ~
-    eZ\Launchpad\Command\Platformsh\Deploy: ~
+    Symfony\Launchpad\Command\Rollback: ~
+    Symfony\Launchpad\Command\Docker\Start: ~
+    Symfony\Launchpad\Command\Docker\Stop: ~
+    Symfony\Launchpad\Command\Docker\Up: ~
+    Symfony\Launchpad\Command\Docker\Clean: ~
+    Symfony\Launchpad\Command\Docker\Status: ~
+    Symfony\Launchpad\Command\Docker\Enter: ~
+    Symfony\Launchpad\Command\Docker\Logs: ~
+    Symfony\Launchpad\Command\Docker\SymfonyRun: ~
+    Symfony\Launchpad\Command\Docker\ComposerRun: ~
 
     # Self
-    eZ\Launchpad\Command\SelfUpdate:
+    Symfony\Launchpad\Command\SelfUpdate:
         calls:
             - [setParameters, [ {release_url: "%github_release_url%"} ] ]
 
     # Docker
-    eZ\Launchpad\Command\Docker\Update:
+    Symfony\Launchpad\Command\Docker\Update:
         calls:
             - [setRequiredRecipes, [ [ 'composer_install' ] ] ]
 
-    eZ\Launchpad\Command\Docker\Build:
+    Symfony\Launchpad\Command\Docker\Build:
         calls:
             - [setRequiredRecipes, [ [ 'composer_install' ] ] ]
 
-    eZ\Launchpad\Command\Docker\Initialize:
+    Symfony\Launchpad\Command\Docker\Initialize:
         calls:
-            - [setRequiredRecipes, [ [ 'composer_install', 'ez_install', 'ibexa_install', 'ez_install_solr' ] ] ]
+            - [setRequiredRecipes, [ [ 'composer_install', 'sf_install' ] ] ]
 
-    eZ\Launchpad\Command\Docker\InitializeSkeleton:
+    Symfony\Launchpad\Command\Docker\InitializeSkeleton:
         calls:
             - [setRequiredRecipes, [ [ 'composer_install' ] ] ]
 
-    eZ\Launchpad\Command\Docker\Create:
+    Symfony\Launchpad\Command\Docker\Create:
         calls:
-            - [setRequiredRecipes, [ [ 'composer_install', 'ez_create', 'import_dump', 'ez_install_solr' ] ] ]
+            - [setRequiredRecipes, [ [ 'composer_install', 'sf_create', 'import_dump' ] ] ]
 
-    eZ\Launchpad\Command\Docker\DumpData:
+    Symfony\Launchpad\Command\Docker\DumpData:
         calls:
             - [setRequiredRecipes, [ [ 'create_dump' ] ] ]
 
-    eZ\Launchpad\Command\Docker\ImportData:
+    Symfony\Launchpad\Command\Docker\ImportData:
         calls:
             - [setRequiredRecipes, [ [ 'import_dump' ] ] ]
 
-    # Platform.sh
-    eZ\Launchpad\Command\Platformsh\Setup:
-        calls:
-            - [setRequiredRecipes, [ [ 'create_dump' ] ] ]
+    # Kubernetes
+    Symfony\Launchpad\Command\Kubernetes\Build: ~
+    Symfony\Launchpad\Command\Kubernetes\Deploy: ~
+    Symfony\Launchpad\Command\Kubernetes\Enter: ~
+    Symfony\Launchpad\Command\Kubernetes\Push: ~
+    Symfony\Launchpad\Command\Kubernetes\Tunnel: ~

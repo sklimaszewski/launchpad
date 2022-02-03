@@ -7,19 +7,19 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Command\Docker;
+namespace Symfony\Launchpad\Command\Docker;
 
-use eZ\Launchpad\Core\DockerCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Launchpad\Core\DockerComposeCommand;
 
-final class SymfonyRun extends DockerCommand
+final class SymfonyRun extends DockerComposeCommand
 {
     protected function configure(): void
     {
         parent::configure();
-        $this->setName('docker:sfrun')->setDescription('Run a Symfony command in the engine.');
+        $this->setName('docker:sfrun')->setDescription('Run a Symfony command in the symfony container.');
         $this->setAliases(['sfrun']);
         $this->addArgument('sfcommand', InputArgument::IS_ARRAY, 'Symfony Command to run in. Use "" to pass options.');
     }
@@ -30,6 +30,6 @@ final class SymfonyRun extends DockerCommand
         $options = '';
         $this->taskExecutor->runSymfomyCommand(implode(' ', $allArguments)." {$options}");
 
-        return DockerCommand::SUCCESS;
+        return DockerComposeCommand::SUCCESS;
     }
 }

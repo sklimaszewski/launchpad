@@ -19,13 +19,13 @@ node "nginx" {
     [DEV]
     }
 
-node "Engine" as engine {
+node "Symfony" as symfony {
     [PHP-FPM] as PhpFPM
     [PHP-CLI] as PhpCli
 }
 
 node "MySQL or MariaDB" as db {
-    database "ezplatform" as StandardDB
+    database "symfony" as StandardDB
 }
 
 node "Redis" as appcache {
@@ -60,10 +60,10 @@ varnish --> PROD
 DEV --> PhpFPM
 PROD --> PhpFPM
 
-engine -up--> db
-engine --> appcache
-engine --> mailcatcher
-engine ---> solr
+symfony -up--> db
+symfony --> appcache
+symfony --> mailcatcher
+symfony ---> solr
 
 redisadmin --> appcache
 dbadmin ---> db

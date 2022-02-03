@@ -1,9 +1,10 @@
 {
-    "name": "ezsystems/launchpad",
-    "description": "eZ Launchpad - Ultimate eZ Platform CLI Helper.",
-    "homepage": "https://github.com/ezsystems/launchpad",
+    "name": "sklimaszewski/launchpad",
+    "description": "Symfony Launchpad - Ultimate Symfony CLI Docker & K8S Helper.",
+    "homepage": "https://github.com/sklimaszewski/launchpad",
     "require": {
         "php": "^7.2.5",
+        "ext-json": "*",
         "symfony/console": "^5.1",
         "symfony/yaml": "^5.1",
         "symfony/dependency-injection": "^5.1",
@@ -21,8 +22,6 @@
         "friendsofphp/php-cs-fixer": "^2.14",
         "phpmd/phpmd": "^2.6",
         "squizlabs/php_codesniffer": "^3.4",
-        "phpunit/phpunit": "^8",
-        "behat/behat": "^3.7",
         "mikey179/vfsstream": "^1.6",
         "twig/twig": "^3",
         "symfony/translation": "^5.1",
@@ -35,19 +34,14 @@
     },
     "autoload": {
         "psr-4": {
-            "eZ\\Launchpad\\": "src/"
+            "Symfony\\Launchpad\\": "src/"
         },
         "files": [
             "src/functions.php"
         ]
     },
     "prefer-stable": true,
-    "autoload-dev": {
-        "psr-4": {
-            "eZ\\Launchpad\\Tests\\": "tests/Tests"
-        }
-    },
     "bin": [
-        "bin/ez"
+        "bin/sf"
     ]
 }

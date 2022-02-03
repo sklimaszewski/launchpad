@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Core\OSX\Optimizer;
+namespace Symfony\Launchpad\Core\OSX\Optimizer;
 
-use eZ\Launchpad\Configuration\Project as ProjectConfiguration;
+use Symfony\Launchpad\Configuration\Project as ProjectConfiguration;
 
 abstract class Optimizer
 {

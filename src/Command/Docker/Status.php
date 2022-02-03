@@ -7,15 +7,15 @@
 
 declare(strict_types=1);
 
-namespace eZ\Launchpad\Command\Docker;
+namespace Symfony\Launchpad\Command\Docker;
 
-use eZ\Launchpad\Core\DockerCommand;
-use eZ\Launchpad\Core\ProjectStatusDumper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Launchpad\Core\DockerComposeCommand;
+use Symfony\Launchpad\Core\ProjectStatusDumper;
 
-final class Status extends DockerCommand
+final class Status extends DockerComposeCommand
 {
     /**
      * @var ProjectStatusDumper
@@ -44,7 +44,7 @@ final class Status extends DockerCommand
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         parent::initialize($input, $output);
-        $this->projectStatusDumper->setDockerClient($this->dockerClient);
+        $this->projectStatusDumper->setDockerClient($this->dockerComposeClient);
         $this->projectStatusDumper->setIo($this->io);
     }
 
@@ -52,6 +52,6 @@ final class Status extends DockerCommand
     {
         $this->projectStatusDumper->dump($input->getArgument('options'));
 
-        return DockerCommand::SUCCESS;
+        return DockerComposeCommand::SUCCESS;
     }
 }
