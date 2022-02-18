@@ -12,12 +12,12 @@ if [ "$DEV_UID" -ne "$ORIG_UID" ] || [ "$DEV_GID" -ne "$ORIG_GID" ]; then
     usermod -u "$DEV_UID" -g "$DEV_GID" www-data
 fi
 
-#cCreate .composer in advance and set the permissions
+# create .composer in advance and set the permissions
 mkdir -p /var/www/.composer && chown www-data:www-data /var/www/.composer
 chown www-data:www-data /var/www/html/project/symfony
 
 # fixing permissions
-mkdir -p /var/www/html/project/symfony/var/{cache,logs} && chown www-data:www-data /var/www/html/project/symfony/var/{cache,logs}
+chown www-data:www-data /var/www/html/project/symfony/var/{cache,logs} 2>/dev/null
 
 # xdebug
 if [ "1" = "${XDEBUG_ENABLED}" ]; then
