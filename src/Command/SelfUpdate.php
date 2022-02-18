@@ -55,6 +55,7 @@ class SelfUpdate extends Command
         }
 
         $localPharFile = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
+        $filePermissions = fileperms($localPharFile);
         $localPharDir = \dirname($localPharFile);
         $backPharFile = $localPharDir.'/sf.phar.backup';
         copy($localPharFile, $backPharFile);
@@ -71,7 +72,7 @@ class SelfUpdate extends Command
             return Command::FAILURE;
         }
         rename($tempPharFile, $localPharFile);
-        chmod($localPharFile, fileperms($backPharFile));
+        chmod($localPharFile, $filePermissions);
         unlink($tempPharFile.'.pubkey');
         $this->io->writeln(
             "Updated from <info>{$application->getVersion()}</info> to <info>{$release->tag_name}</info>."
