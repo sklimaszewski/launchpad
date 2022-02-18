@@ -37,8 +37,5 @@ services:
             - { name: kernel.event_listener, event: console.command, method: onCommandAction }
 
     # OSX OPTIMIZER
-    Symfony\Launchpad\Core\OSX\Optimizer\D4M:
-        tags: [sflaunchpad.osx.optimizer]
-
     Symfony\Launchpad\Core\OSX\Optimizer\NFSVolumes:
         tags: [sflaunchpad.osx.optimizer]
