@@ -66,8 +66,8 @@ done
 echo "Installing Symfony ($REPO:$VERSION) in the container"
 
 # Install
-$COMPOSER create-project --no-interaction $REPO symfony ^$VERSION
 cd symfony
+$COMPOSER create-project --no-interaction $REPO . ^$VERSION
 
 MAJOR_VERSION=`echo $VERSION | cut -c 1-2`
 
