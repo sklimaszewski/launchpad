@@ -55,14 +55,6 @@ class DockerCompose
     {
         $services = [];
         foreach ($this->getServices() as $name => $service) {
-            if (isset($service['volumes'])) {
-                $volumes = NovaCollection($service['volumes']);
-                $service['volumes'] = $volumes->prune(
-                    function ($value) {
-                        return false === strpos($value, 'symfony');
-                    }
-                )->toArray();
-            }
             $services[$name] = $service;
         }
         $this->compose['services'] = $services;
@@ -77,14 +69,6 @@ class DockerCompose
                 continue;
             }
 
-            if (isset($service['volumes'])) {
-                $volumes = NovaCollection($service['volumes']);
-                $service['volumes'] = $volumes->prune(
-                    function ($value) {
-                        return false === strpos($value, 'symfony');
-                    }
-                )->toArray();
-            }
             if (isset($service['environment'])) {
                 $environnementVars = NovaCollection($service['environment']);
                 $service['environment'] = $environnementVars->prune(
