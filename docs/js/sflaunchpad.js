@@ -4,6 +4,7 @@ $(function () {
             return $(trigger).parent().find("code:first").text();
         }
     });
+
     clipboard.on('success', function (e) {
         var $trigger = $(e.trigger);
         $trigger.text("Copied!");
@@ -12,5 +13,4 @@ $(function () {
         }, 3000);
         e.clearSelection();
     });
-
 });

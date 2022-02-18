@@ -24,7 +24,7 @@
         }
     ],
     "git-tag": "package_version",
-    "main": "bin/sf",
+    "main": "bin/sf-prod",
     "key": "sflaunchpad-private.pem",
     "output": "sf.phar",
     "stub": true

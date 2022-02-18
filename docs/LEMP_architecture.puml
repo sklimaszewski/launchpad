@@ -5,10 +5,8 @@ title "Development Architecture - LEMP"
 cloud "Exposed Ports" {
     () XX080 as SymfonyDevModePort
     () XX081 as SymfonyProdModePort
-    () XX082 as SymfonyProdModeVarnishPort
 
     () XX083 as RedisAdminPort
-    () XX983 as SorlPort
     () XX084 as DatabaseAdminPort
     () XX306 as DatabaseEnginePort
     () XX180 as MailcatcherPort
@@ -17,7 +15,7 @@ cloud "Exposed Ports" {
 node "nginx" {
     [PROD]
     [DEV]
-    }
+}
 
 node "Symfony" as symfony {
     [PHP-FPM] as PhpFPM
@@ -31,9 +29,6 @@ node "MySQL or MariaDB" as db {
 node "Redis" as appcache {
 }
 
-node "Varnish 4.x" as varnish {
-}
-
 node "Redis Admin" as redisadmin {
 }
 
@@ -43,19 +38,13 @@ node "Mailcatcher" as mailcatcher {
 node "Adminer" as dbadmin {
 }
 
-node "Solr" as solr {
-}
-
 RedisAdminPort -> redisadmin: Web Interface
 DatabaseEnginePort ---> db: TCP forward
 MailcatcherPort -> mailcatcher: Web Interface
 DatabaseAdminPort --> dbadmin: Web Interface
-SorlPort -> solr
 
 SymfonyDevModePort --> DEV: Web
 SymfonyProdModePort --> PROD: Web
-SymfonyProdModeVarnishPort --> varnish: Web
-varnish --> PROD
 
 DEV --> PhpFPM
 PROD --> PhpFPM
@@ -63,7 +52,6 @@ PROD --> PhpFPM
 symfony -up--> db
 symfony --> appcache
 symfony --> mailcatcher
-symfony ---> solr
 
 redisadmin --> appcache
 dbadmin ---> db

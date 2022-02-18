@@ -11,29 +11,10 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700|Open+Sans:400,600">
 
-    <link rel="stylesheet" type="text/css" href="css/sflaunchpad.css">
+    <link rel="stylesheet" type="text/css" href="./css/sflaunchpad.css">
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-    <!-- Google Analytics -->
-    <script>
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function () {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-
-        ga('create', 'UA-303624-15', 'auto');
-        ga('send', 'pageview');
-
-    </script>
 </head>
 <body>
 <main class="white-background">
@@ -47,10 +28,6 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-
-                    <a class="navbar-brand" href="https://ezsystems.github.io/launchpad">
-                        <img src="https://www.symfony.com/assets/images/ibexa/symfony_intermediate_wordmark_symfony_gradient.svg" width="200" />
-                    </a>
                 </div>
 
                 <div class="collapse navbar-collapse " id="navbar">
@@ -60,23 +37,24 @@
                         <li><a href="#commands">Commands</a></li>
                         <li><a href="#deploy">Deployment</a></li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More
-                                <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                More
+                                <span class="caret"></span>
+                            </a>
                             <ul class="dropdown-menu ezlp-submenu">
-                                <li><a href="#stack">Stack</a></li>
                                 <li><a href="#mac-tips">Mac OS X - Tips</a></li>
                                 <li><a href="#home">Global configurations</a></li>
                             </ul>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="https://discuss.symfony.com" target="_blank">Discuss</a></li>
-                        <li><a href="https://www.symfony.com" target="_blank">eZ Platform</a></li>
-                        <li><a href="https://www.symfony.com/Blog">eZ Blog</a></li>
-                        <li><a href="//ez-community-on-slack.herokuapp.com" target="_blank"> Slack
-                            <i class="fa fa-slack" aria-hidden="true"></i></a></li>
-                        <li><a href="//github.com/ezsystems/launchpad" target="_blank">Github
-                            <i class="fa fa-github" aria-hidden="true"></i></a></li>
+                        <li><a href="https://ezsystems.github.io/launchpad/" target="_blank">eZ Launchpad</a></li>
+                        <li>
+                            <a href="https://github.com/sklimaszewski/launchpad" target="_blank">
+                                Github
+                                <i class="fa fa-github" aria-hidden="true"></i>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -85,9 +63,9 @@
 
     <div class="container">
         <h1><i class="fa fa-rocket fa-2x" aria-hidden="true"></i>Symfony Launchpad</h1>
-        <p>A tool that will help you build an
-            <a href="http://symfony.com" target="_blank">eZ Platform</a> project on top of
-            <a href="https://www.docker.com/" target="_blank">Docker</a> in less than 5 minutes.</p>
+        <p>Symfony Launchpad is a CLI tool to start a Symfony project in 5 min on top of a full Docker stack.</p>
+        <p>It is fully based on eZ Launchpad created for eZ Platform / Ibexa installations.</p>
+
         <div class="alert alert-success" role="alert">
             <p><i class="fa fa-code" aria-hidden="true"></i> You will end up with a full
                 <strong>Docker stack</strong> where the source-code is on your host for you
@@ -95,37 +73,6 @@
             </p>
         </div>
 
-        <h2 id="screencast"><i class="fa fa-play" aria-hidden="true"></i> Demo</h2>
-        <div>
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active">
-                    <a href="#screeninit" aria-controls="screeninit" role="tab" data-toggle="tab">Init<small>ialization</small></a>
-                </li>
-                <li role="presentation">
-                    <a href="#screencreate" aria-controls="screencreate" role="tab" data-toggle="tab">Create</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="screeninit">
-                    <p>This is a demo of an
-                        <a href="#initstack">initialization</a>. Starting from scratch you will get everything ready to code, commit and push!
-                    </p>
-                    <center>
-                        <iframe width="800" height="450" src="https://www.youtube.com/embed/N_wd-yAlKmA" frameborder="0" allowfullscreen></iframe>
-                    </center>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="screencreate">
-                    <p>This is a demo of a
-                        <a href="#createstack">creation</a>. Starting from a git repository you will get everything ready to code, commit and push!
-                    </p>
-                    <center>
-                        <iframe width="800" height="450" src="https://www.youtube.com/embed/ap4tdnGApWI" frameborder="0" allowfullscreen></iframe>
-                    </center>
-                </div>
-            </div>
-
-        </div>
         <h2 id="installation"><i class="fa fa-magic" aria-hidden="true"></i> Installation</h2>
         <div>
             <p>Requirements:</p>
@@ -151,7 +98,7 @@
                         <button class="to-clipboard">
                             <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
                         </button>
-                        <pre>$ <code>curl -LSs https://ezsystems.github.io/launchpad/install.bash | bash</code></pre>
+                        <pre>$ <code>curl -LSs https://sklimaszewski.github.io/launchpad/install.bash | bash</code></pre>
                     </div>
 
                 </div>
@@ -162,40 +109,19 @@
                         <button class="to-clipboard">
                             <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
                         </button>
-                        <pre>$ <code>wget -O - &quot;https://ezsystems.github.io/launchpad/install.bash&quot; | bash</code></pre>
+                        <pre>$ <code>wget -O - &quot;https://sklimaszewski.github.io/launchpad/install.bash&quot; | bash</code></pre>
                     </div>
-
                 </div>
             </div>
         </div>
         <h2 id="usage"><i class="fa fa-keyboard-o" aria-hidden="true"></i> Usage</h2>
         <div>
-            <p>When you have installed Symfony Launchpad (<em>~/ez</em>) you can start enjoying the feature.</p>
+            <p>When you have installed Symfony Launchpad (<em>~/sf</em>) you can start enjoying the feature.</p>
             <p>Symfony Launchpad provides 2 main features:</p>
             <ul>
-                <li><strong>Initialization</strong> of a brand new eZ Platform Stack (on top of Docker)</li>
+                <li><strong>Initialization</strong> of a brand new Symfony project (on top of Docker)</li>
                 <li><strong>Create</strong> the Docker Stack related to the current directory.</li>
             </ul>
-
-            <div class="alert alert-warning clickable" role="alert" data-toggle="collapse" href="#blackfireexports" aria-expanded="false" aria-controls="blackfireexports">
-                <p>
-                    <i class="fa fa-fire" aria-hidden="true"></i> If you are using
-                    <a href="https://blackfire.io">Blackfire.io</a>, then don't forget to export your credentials before to run the following commands.
-
-                </p>
-            </div>
-            <div id="blackfireexports" class="collapse">
-                <div class="highlight">
-                    <button class="to-clipboard">
-                        <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
-                    </button>
-                    <pre>$ <code>export BLACKFIRE_CLIENT_ID=xxxx-xxxx-xxxx-xxxx-xxxxx
-export BLACKFIRE_CLIENT_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-export BLACKFIRE_SERVER_ID=xxxx-xxxx-xxxx-xxxx-xxxxx
-export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</code></pre>
-                </div>
-
-            </div>
 
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active">
@@ -209,13 +135,14 @@ export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="initstack">
                     <h3><i class="fa fa-play" aria-hidden="true"></i> Init<small>ialization</small></h3>
-                    <p>That is the from scratch installation. You need to do that when you have nothing and you want to start a new project with eZ Platform.
+                    <p>
+                        That is the from scratch installation. You need to do that when you have nothing and you want to start a new project based on Symfony.
                     </p>
                     <div class="highlight">
                         <button class="to-clipboard">
                             <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
                         </button>
-                        <pre>$ <code>~/ez init</code></pre>
+                        <pre>$ <code>~/sf init</code></pre>
                     </div>
 
 
@@ -230,10 +157,10 @@ export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
                     <ul>
                         <li>Configuration of your project locally.</li>
                         <li>Download (pull) the correct image on your Docker Daemon.</li>
-                        <li>Set up an eZ compliant <em>docker-compose.yml</em>.</li>
+                        <li>Set up a Symfony compliant <em>docker-compose.yml</em>.</li>
                         <li>Create and start the containers required (depending of the choices you made).</li>
                         <li>Install Composer in the Engine container (where PHP is executed in your stack).</li>
-                        <li>Install eZ Platform through Composer inside the stack.</li>
+                        <li>Install clean Symfony project through Composer inside the stack.</li>
                     </ul>
 
                     <p>Once the Initialization is finished, the project is up, you can check doing:</p>
@@ -241,7 +168,7 @@ export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
                         <button class="to-clipboard">
                             <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
                         </button>
-                        <pre>$ <code>~/ez ps</code></pre>
+                        <pre>$ <code>~/sf ps</code></pre>
                     </div>
 
 
@@ -250,7 +177,7 @@ export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
                         <button class="to-clipboard">
                             <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
                         </button>
-                        <pre>$ <code>~/ez dumpdata; git init; git add .; git commit -m &quot;First Initial Commit&quot;</code></pre>
+                        <pre>$ <code>~/sf dumpdata; git init; git add .; git commit -m &quot;First Initial Commit&quot;</code></pre>
                     </div>
 
                     <div class="highlight">
@@ -259,27 +186,12 @@ export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
                         </button>
                         <pre>$ <code>git remote add origin https://gitorigin.com/xxx/xxxx-xxx.git; git push -u origin master</code></pre>
                     </div>
-
-
-                    <h4><i class="fa fa-building" aria-hidden="true"></i> eZ Platform Enterprise</h4>
-                    <p>content.usage.init.end.finished.entreprise</p>
-                    <div class="highlight">
-                        <button class="to-clipboard">
-                            <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
-                        </button>
-                        <pre>$ <code>~/ez init ezsystems/symfony-ee</code></pre>
-                    </div>
-
-                    <p>When Symfony Launchpad will ask you about HTTP-BASIC, then you have to provide the
-                        <a href="https://doc.ez.no/display/TECHDOC/Using+Composer" target="_blank">Installation Key and the Token</a>.
-                    </p>
-
                 </div>
                 <div role="tabpanel" class="tab-pane" id="createstack">
                     <h3>
                         <i class="fa fa-fast-forward" aria-hidden="true"></i> Create
                     </h3>
-                    <p>In this context you have already a project somewhere, someone already did a <em>~/ez init</em>
+                    <p>In this context you have already a project somewhere, someone already did a <em>~/sf init</em>
                     </p>
                     <p>Then it most likely that you did</p>
                     <div class="highlight">
@@ -298,69 +210,35 @@ export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
                         <button class="to-clipboard">
                             <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
                         </button>
-                        <pre>$ <code>~/ez create</code></pre>
+                        <pre>$ <code>~/sf create</code></pre>
                     </div>
 
-                    <p>Here Symfony Launchpad will pull the images, create the containers of your stack as well a importing the database/storage.</p>
+                    <p>Here Symfony Launchpad will pull the images, create the containers of your stack as well as importing the database/storage.</p>
                 </div>
             </div>
         </div>
 
         <h2 id="deploy"><i class="fa fa-th-list" aria-hidden="true"></i> Deployment</h2>
         <div>
-            <p>Symfony Launchpad can help you to deploy as well. Even if it is optional and you can deploy the way you want we wanted to provide simplifications.
+            <p>
+                Symfony Launchpad can help you to deploy as well to <b>Kubernetes</b>.
+                Even if it is optional and you can deploy the way you want we wanted to provide simplifications.
             </p>
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active">
-                    <a href="#deploy-psh" aria-controls="deploy-psh" role="tab" data-toggle="tab">Platform.sh</a>
-                </li>
-                <li role="presentation">
-                    <a href="#deploy-aws" aria-controls="deploy-aws" role="tab" data-toggle="tab">AWS
-                        <small>(@todo)</small>
-                    </a>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="deploy-psh">
-                    <h3>Setup</h3>
-                    <p><a href="https://platform.sh/product">Platform.sh</a> is a PaaS (<strong>P</strong>latform
-                        <strong>a</strong>s <strong>a</strong>
-                        <strong>S</strong>ervice).<br /> With Platform.sh there is no real deployment process to run manually. Platform.sh will just create and synchronize environments based on your git repository!
-                    </p>
-                    <p>Symfony Launchpad provides you a way to set up your eZ Project to be Platform.sh ready.
-                    </p>
+            <div>
+                <h3>Setup</h3>
+                <p>@TODO</p>
 
-                    <div class="highlight">
-                        <button class="to-clipboard">
-                            <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
-                        </button>
-                        <pre>$ <code>~/ez platformsh:setup</code></pre>
-                    </div>
-
-                    <p>This command will create and generate files required by Platform.sh. Because Symfony Launchpad knows your project and the services you need it will adapt the Plaftorm.sh configuration files to it.
-                    </p>
-                    <p>Here is the list of files that are going to be created.</p>
-                    <div class="highlight">
-                    <pre><code>.platform/services.yaml
-.platform/routes.yaml
-.platform.app.yaml
-symfony/app/config/env/platformsh.php</code></pre>
-                    </div>
-                    <p>Because you will need to initialize the database and the storage on Platform.sh (the first time), Symfony Launchpad will also create a dump.</p>
-
-                    <h3>Deploy</h3>
-                    <p>As mentioned there is not real "deployment" process, this command will just display some documentation.
-                    </p>
-                    <div class="highlight">
-                        <button class="to-clipboard">
-                            <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
-                        </button>
-                        <pre>$ <code>~/ez platformsh:deploy</code></pre>
-                    </div>
-
-                </div>
-                <div role="tabpanel" class="tab-pane" id="deploy-aws">
-                    <p>Coming soon...</p>
+                <h3>Deploy</h3>
+                <p>
+                    After your local configuration is done, you can build image. Push to the registry and deploy using custom <b>Helm Chart</b>.
+                </p>
+                <div class="highlight">
+                    <button class="to-clipboard">
+                        <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
+                    </button>
+                    <pre><code>~/sf k8s:build symfony
+~/sf k8s:push symfony
+~/sf k8s:deploy</code></pre>
                 </div>
             </div>
         </div>
@@ -372,13 +250,13 @@ symfony/app/config/env/platformsh.php</code></pre>
                 <button class="to-clipboard">
                     <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
                 </button>
-                <pre>$ <code>~/ez info</code></pre>
+                <pre>$ <code>~/sf info</code></pre>
             </div>
 
             <p>Depending on the initialization, you might have more or less services, but here is the most common stack.</p>
 
             <h3>LEMP: Linux Nginx Mysql/MariaDB PHP-FPM</h3>
-            <img src="images/puml/LEMP_architecture.png" class="img-responsive" />
+            <img src="images/puml/architecture.png" class="img-responsive" />
 
         </div>
 
@@ -387,7 +265,7 @@ symfony/app/config/env/platformsh.php</code></pre>
             <p>Symfony Launchpad was made to help you with a local Docker stack.</p>
             <p>To do so, here are the commands available to you:</p>
             <div class="highlight">
-            <pre>$ ~/ez
+            <pre>$ ~/sf
                 <code>
 Usage:
   command [options] [arguments]
@@ -399,27 +277,30 @@ Available commands:
  docker
   docker:build       [build] Build all the services (or just one).
   docker:clean       [docker:down|clean|down] Clean all the services.
-  docker:comprun     [comprun] Run Composer command in the engine.
+  docker:comprun     [comprun] Run Composer command in the symfony container.
   docker:create      [create] Create all the services.
   docker:dumpdata    [dumpdata] Dump Database and Storage.
   docker:enter       [enter|docker:exec|exec] Enter in a container.
   docker:importdata  [importdata] Import Database and Storage.
   docker:initialize  [docker:init|initialize|init] Initialize the project and all the services.
   docker:logs        [logs|log] Display the logs.
-  docker:sfrun       [sfrun] Run a Symfony command in the engine.
+  docker:sfrun       [sfrun] Run a Symfony command in the symfony container.
   docker:start       [start] Start all the services (or just one).
   docker:status      [docker:ps|docker:info|ps|info] Obtaining the project information.
   docker:stop        [stop] Stop all the services (or just one).
   docker:up          [up] Up all the services (or just one).
   docker:update      Update to last images.
- platformsh
-  platformsh:deploy  [psh:deploy] Deploy with Platformsh integration.
-  platformsh:setup   [psh:setup] Set up the Platformsh integration.</code></pre>
+ k8s
+  k8s:build          Build new image for a given container.
+  k8s:deploy         [deploy] Deploy application to Kubernetes using Helm Chart.
+  k8s:enter          Enter in a container.
+  k8s:push           [push] Push new image of a given container to the registry.
+  k8s:tunnel         [tunnel] Forward port to/from selected pod.</code></pre>
             </div>
 
             <div>
                 <p>When you want to provide extra arguments to a Symfony command, you have to wrap everything (command + arguments) inside quotes:</p>
-                <pre>$ ~/ez sfrun "cache:clear --env=prod"</pre>
+                <pre>$ ~/sf sfrun "cache:clear --env=prod"</pre>
             </div>
 
         </div>
@@ -433,23 +314,20 @@ Available commands:
                 <button class="to-clipboard">
                     <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
                 </button>
-                <pre><code>docker:
-    host_machine_mapping: "/Users/bob/MyProjects:/data/MYPROJECTS"
-    host_composer_cache_dir: "/data/MYPROJECTS/.composer_cache"
-
-provisioning:
-    folder_name: "myprovisioningfoldername"
-
-composer:
-    http_basic:
-        hostname:
-            host: www.hostname.com
-            login: login
-            password: pass
-    token:
-        github:
-            host: github.com
-            value: tokenvalue</code></pre>
+                <pre><code>provisioning:
+    folder_name: myprovisioningfoldername
+docker:
+    compose_filename: docker-compose.yml
+    network_name: symfony
+    network_prefix_port: 0
+kubernetes:
+    folder_name: kubernetes
+    kubeconfig: /Users/ubuntu/kubeconfig.yml
+    namespace: symfony
+    registry:
+        name: example.com/myregistry/symfony
+        username: user-token
+        password: user-token-pass</code></pre>
             </div>
 
             <p>Note that this configuration is global and won't be included in the project (i.e. in the CVS repository). But it will be including in your local stack.
@@ -507,65 +385,6 @@ composer:
                 </p>
             </div>
 
-
-            <h3>Update from D4M-NFS</h3>
-
-            <p>First you need to add an option to your <strong>/etc/exports</strong>, spot the <strong>-alldirs</strong>:
-            </p>
-            <div class="highlight">
-                <button class="to-clipboard">
-                    <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
-                </button>
-                <pre>$ cat /etc/exports<code>
-/Users/plopix -mapall=plopix:staff -alldirs localhost</code></pre>
-            </div>
-            <p>Second you need to update the version of <em>docker-compose</em> in your
-                <strong>provisioning/dev/docker-compose.yml</strong> file to
-                <strong>2.1</strong>. And you need to create a new file named
-                <strong>provisioning/dev/docker-compose-osx.yml</strong> with this content:
-            </p>
-            <div class="highlight">
-                <button class="to-clipboard">
-                    <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
-                </button>
-                <pre>$ cat provisioning/dev/docker-compose-osx.yml<code>
-version: '2.1'
-services:
-    engine:
-        volumes:
-            - "nfsmount:${PROJECTMAPPINGFOLDER}"
-volumes:
-  nfsmount:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=host.docker.internal,lock
-      device: ":${PROJECTCOMPOSEPATH}/"
-</code></pre>
-            </div>
-            <p>Once the setup is up-to-date, you can <strong>dumpdata</strong> (to backup),
-                <strong>clean</strong>, and re-<strong>create</strong> the project again:
-            </p>
-            <div class="highlight">
-                <button class="to-clipboard">
-                    <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
-                </button>
-                <pre><code>$ ~/ez dumpdata; ~/ez clean; ~/ez create</code></pre>
-            </div>
-            <p>If you were using a special mapping, fix it:
-            </p>
-            <div class="highlight">
-                <button class="to-clipboard">
-                    <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
-                </button>
-                <pre><code>docker:
-        host_machine_mapping: "/Users/plopix:/Users/plopix"
-        host_composer_cache_dir: "/Users/plopix/.composer_cache</code></pre>
-            </div>
-
-            <p>That is it!
-            </p>
-
             <h3>Store cache in the container</h3>
             <p>Even with D4M and the NFS mount, performances can be optimized. The following is clearly a trick. But a trick that works pretty well!<br /> Here is the magic, in your env you have this line:
             </p>
@@ -585,7 +404,7 @@ engine:
                 <button class="to-clipboard">
                     <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
                 </button>
-                <pre><code>$ ~/ez up; ~/ez stop; ~/ez start</code></pre>
+                <pre><code>$ ~/sf up; ~/sf stop; ~/sf start</code></pre>
             </div>
         </div>
 
@@ -595,61 +414,11 @@ engine:
     </div>
 
     <footer>
-        <div class="footer-content">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-3">
-                        <img class="logotype" width="200" height="100" src="https://symfony.com/assets/themes/symfony/images/ibexa_logo.svg" alt="ibexa">
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="ezrichtext-field">
-                            <ul>
-                                <li><a href="https://portal.productboard.com/ezproduct" target="_blank">Roadmap</a></li>
-                                <li><a href="https://www.ibexa.co/about-ibexa" target="_blank">About Ibexa</a></li>
-                                <li><a href="https://www.ibexa.co/product">Products</a></li>
-                            </ul>
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="ezrichtext-field">
-                            <ul>
-                                <li><a href="https://symfony.com/documentation-center">Documentation</a></li>
-                                <li><a href="/security-advisories">Security Advisories</a></li>
-                                <li><a href="http://share.ez.no" target="_blank">eZ Publish</a></li>
-                            </ul>
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-3 footer-social text-center">
-                        <h4>Follow us on social media</h4>
-
-                        <a href="https://www.youtube.com/c/ibexa/" target="_blank">
-                            <i class="fa fa-youtube fa"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/company/ibexa/" target="_blank">
-                            <i class="fa fa-linkedin fa"></i>
-                        </a>
-                        <a href="https://facebook.com/ibexa.co" target="_blank">
-                            <i class="fa fa-facebook fa"></i>
-                        </a>
-                        <a href="https://twitter.com/ibexa_co" target="_blank">
-                            <i class="fa fa-twitter fa"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="copyright-content">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        <p>Copyright © 1999-2020 Ibexa All rights reserved.</p>
-                        <p>Powered by <a href="https://www.ibexa.co/product" title="eZ Platform">eZ Platform</a></p>
+                        <p>Copyright © 2022. All rights reserved.</p>
                     </div>
                 </div>
             </div>
