@@ -16,7 +16,6 @@
 /docs/sf-old.phar
 
 # Tests
-.dockerignore
 /docker
 /kubernetes
 /symfony
