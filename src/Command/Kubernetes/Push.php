@@ -25,6 +25,7 @@ final class Push extends DockerCommand
             $input->getArgument('container'),
             $input->getOption('tag')
         );
+        $this->dockerClient->logout();
 
         return DockerCommand::SUCCESS;
     }

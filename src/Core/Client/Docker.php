@@ -37,15 +37,23 @@ class Docker
         $this->runner = $runner;
     }
 
-    public function build(string $container, string $tag = 'latest')
+    public function build(string $container, array $tags = ['latest'], ?string $cacheFrom = null)
     {
         $args = [
             '--network host',
             '--build-arg BUILDKIT_INLINE_CACHE=1',
-            '--tag ' . $this->options['registry-name'] . '/' . $container . ':' . $tag,
-            '--file ' . $this->options['provisioning-folder-name'] . '/dev/' . $container . '/Dockerfile',
-            '.',
         ];
+
+        if ($cacheFrom) {
+            $args[] = '--cache-from ' . $this->options['registry-name'] . '/' . $container . ':' . $cacheFrom;
+        }
+
+        foreach ($tags as $tag) {
+            $args[] = '--tag ' . $this->options['registry-name'] . '/' . $container . ':' . $tag;
+        }
+
+        $args[] = '--file ' . $this->options['provisioning-folder-name'] . '/dev/' . $container . '/Dockerfile';
+        $args[] = '.';
 
         return $this->perform('build', $args);
     }
@@ -58,6 +66,14 @@ class Docker
             '--password-stdin',
         ];
         return $this->perform('login', $args, $this->options['registry-password']);
+    }
+
+    public function logout()
+    {
+        $args = [
+            $this->getRegistryHost()
+        ];
+        return $this->perform('logout', $args);
     }
 
     public function push(string $container, string $tag = 'latest')

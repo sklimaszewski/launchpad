@@ -44,6 +44,9 @@ abstract class KubernetesCommand extends Command
             $kubeConfigPath = $input->getOption('kubeconfig');
         }
 
+        // Home directory fix
+        $kubeConfigPath = str_replace('~/', getenv('HOME') . '/', $kubeConfigPath);
+
         $fs = new Filesystem();
         if (!$fs->exists($kubeConfigPath)) {
             throw new RuntimeException("There is no kubeconfig file at {$kubeConfigPath}");

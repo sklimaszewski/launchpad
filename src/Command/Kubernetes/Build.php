@@ -16,14 +16,16 @@ final class Build extends DockerCommand
     {
         $this->setName('k8s:build')->setDescription('Build new image for a given container.');
         $this->addArgument('container', InputArgument::REQUIRED, 'Container name to build image');
-        $this->addOption('tag', 't', InputOption::VALUE_OPTIONAL, 'Image tag', 'latest');
+        $this->addOption('tag', 't', InputOption::VALUE_IS_ARRAY, 'Image tag', 'latest');
+        $this->addOption('cache-from', null, InputOption::VALUE_REQUIRED, 'Build image from cache');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->dockerClient->build(
             $input->getArgument('container'),
-            $input->getOption('tag')
+            $input->getOption('tag'),
+            $input->getOption('cache-from')
         );
 
         return DockerCommand::SUCCESS;

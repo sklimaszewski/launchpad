@@ -48,6 +48,9 @@ abstract class HelmCommand extends Command
             $kubeConfigPath = $input->getOption('kubeconfig');
         }
 
+        // Home directory fix
+        $kubeConfigPath = str_replace('~/', getenv('HOME') . '/', $kubeConfigPath);
+
         $namespace = $this->projectConfiguration->get('kubernetes.namespace');
         if ($input->getOption('namespace')){
             $namespace = $input->getOption('namespace');
