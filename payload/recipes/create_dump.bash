@@ -54,7 +54,7 @@ do
         ;;
         mongodb)
             echo "Dumping ${!DATABASE_NAME_VAR} database."
-            mongodump --uri=${!DATABASE_URL_VAR} --gzip --archive=${DUMP_DIR}/${DB_FILE_NAME}
+            mongodump --uri=${!DATABASE_URL_VAR} --gzip --archive=${DUMP_DIR}/${DB_FILE_NAME}.gz
             echo "${!DATABASE_NAME_VAR} database dumped."
         ;;
         *)
