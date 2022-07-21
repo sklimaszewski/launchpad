@@ -7,6 +7,12 @@ COMPOSER="$PHP -d memory_limit=-1 /usr/local/bin/composer"
 REPO=$1
 VERSION=$2
 
+
+for prefix in $DATABASE_PREFIXES
+do
+   echo -n "${prefix}-"
+done
+
 DATABASE_PREFIXES=${DATABASE_PREFIXES:-DATABASE}
 for prefix in $DATABASE_PREFIXES
 do
@@ -48,10 +54,7 @@ do
         ;;
         mongodb)
             # Wait for the DB
-            while ! mongostat -n 1 --uri=${!DATABASE_URL_VAR} > /dev/null 2>&1; do
-                echo -n "."
-                sleep 1
-            done
+            sleep 3
             echo ""
         ;;
         *)

@@ -50,10 +50,7 @@ do
         ;;
         mongodb)
             # Wait for the DB
-            while ! mongostat -n 1 --uri=${!DATABASE_URL_VAR} > /dev/null 2>&1; do
-                echo -n "."
-                sleep 1
-            done
+            sleep 3
             echo ""
         ;;
         *)

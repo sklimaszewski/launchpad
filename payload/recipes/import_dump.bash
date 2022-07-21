@@ -57,13 +57,6 @@ do
             echo "${!DATABASE_NAME_VAR} database imported."
         ;;
         mongodb)
-            # Wait for the DB
-            while ! mongostat -n 1 --uri=${!DATABASE_URL_VAR} > /dev/null 2>&1; do
-                echo -n "."
-                sleep 1
-            done
-            echo ""
-
             DB_FILE_PATH="$DUMP_DIR/$DB_FILE_NAME.gz"
 
             echo "Importing ${!DATABASE_NAME_VAR} database."
