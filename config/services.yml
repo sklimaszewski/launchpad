@@ -10,7 +10,7 @@ services:
 
     Symfony\Launchpad\Listener\ApplicationUpdate:
         arguments:
-            - {release_url: "%github_release_url%"}
+            - { release_url: "%github_release_url%" }
         tags:
             - { name: kernel.event_listener, event: console.command, method: onCommandAction }
 

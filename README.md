@@ -10,15 +10,21 @@ You can find the full documentation here: https://sklimaszewski.github.io/symfon
 
 - [x] Allow for DATABASE_URL env variable usage
 - [x] Removed Ibexa-specific functionalities/code
-- [x] Platform.sh support replaced with K8S tools
+- [x] Platform.sh support replaced with Kubernetes (K8S) tools
 - [x] Reduce main engine docker image size and build time
 
-## Possible future improvements
+## Future roadmap
+
+- [ ] Add support for PHP8+ and Symfony 6
+- [ ] Remove NFS setup for MacOS or replace with better approach
+- [ ] Support ARM processors (Apple's M1 + M2)
+
+## Pending minor improvements
 
 - [ ] Dump/import databases from db container instead of symfony
 - [ ] Setup xdebug configuration
 - [ ] Allow for postgresql database
-- [ ] Bring back testing
+- [ ] Bring back tests
 
 ## Contribution
 

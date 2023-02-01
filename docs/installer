@@ -41,7 +41,7 @@ file_put_contents(
 file_put_contents(
     "sf.phar.pubkey",
     file_get_contents(
-        "https://sklimaszewski.github.io/launchpad/sf.phar.pubkey",
+        "https://sklimaszewski.github.io/symfony-launchpad/sf.phar.pubkey",
         false,
         $context
     )

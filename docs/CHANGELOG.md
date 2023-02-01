@@ -2,6 +2,9 @@
 
 ## CHANGELOG
 
+### 1.1.1
+- Updating documentation
+
 ### 1.1.0
 - Renaming repository
 - Updating dependencies
