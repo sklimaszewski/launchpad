@@ -1,7 +1,6 @@
 ---
 parameters:
-    # TODO: Replace
-    github_release_url: "https://api.github.com/repos/sklimaszewski/launchpad/releases?draft=false&prerelease=false"
+    github_release_url: "https://api.github.com/repos/sklimaszewski/symfony-launchpad/releases?draft=false&prerelease=false"
 
 services:
 

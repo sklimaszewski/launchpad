@@ -48,8 +48,13 @@ class Kubectl
     /**
      * @return Process|string
      */
-    protected function perform(string $action, string $pod, array $options = [], string $argument = '', bool $dryRun = false)
-    {
+    protected function perform(
+        string $action,
+        string $pod,
+        array $options = [],
+        string $argument = '',
+        bool $dryRun = false
+    ) {
         $args = [
             "--namespace {$this->getNamespace()}",
             "--kubeconfig {$this->getKubeConfigFile()}",

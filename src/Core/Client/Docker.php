@@ -45,14 +45,14 @@ class Docker
         ];
 
         if ($cacheFrom) {
-            $args[] = '--cache-from ' . $this->options['registry-name'] . '/' . $container . ':' . $cacheFrom;
+            $args[] = '--cache-from '.$this->options['registry-name'].'/'.$container.':'.$cacheFrom;
         }
 
         foreach ($tags as $tag) {
-            $args[] = '--tag ' . $this->options['registry-name'] . '/' . $container . ':' . $tag;
+            $args[] = '--tag '.$this->options['registry-name'].'/'.$container.':'.$tag;
         }
 
-        $args[] = '--file ' . $this->options['provisioning-folder-name'] . '/dev/' . $container . '/Dockerfile';
+        $args[] = '--file '.$this->options['provisioning-folder-name'].'/dev/'.$container.'/Dockerfile';
         $args[] = '.';
 
         return $this->perform('build', $args);
@@ -62,24 +62,26 @@ class Docker
     {
         $args = [
             $this->getRegistryHost(),
-            '--username ' . $this->options['registry-username'],
+            '--username '.$this->options['registry-username'],
             '--password-stdin',
         ];
+
         return $this->perform('login', $args, $this->options['registry-password']);
     }
 
     public function logout()
     {
         $args = [
-            $this->getRegistryHost()
+            $this->getRegistryHost(),
         ];
+
         return $this->perform('logout', $args);
     }
 
     public function push(string $container, string $tag = 'latest')
     {
         $args = [
-            $this->options['registry-name'] . '/' . $container . ':' . $tag,
+            $this->options['registry-name'].'/'.$container.':'.$tag,
         ];
 
         return $this->perform('push', $args);
@@ -94,7 +96,7 @@ class Docker
 
     protected function getRegistryHost(): string
     {
-        return parse_url('//' . $this->options['registry-name'], PHP_URL_HOST);
+        return parse_url('//'.$this->options['registry-name'], PHP_URL_HOST);
     }
 
     /**
@@ -103,11 +105,11 @@ class Docker
     protected function perform(string $action, array $args = [], ?string $stdin = null, bool $dryRun = false)
     {
         $stringArgs = implode(' ', $args);
-        $command = "docker";
+        $command = 'docker';
 
         $fullCommand = trim("{$command} {$action} {$stringArgs}");
         if ($stdin) {
-            $fullCommand = trim('echo "' . $stdin . '" | ' . $fullCommand);
+            $fullCommand = trim('echo "'.$stdin.'" | '.$fullCommand);
         }
 
         if (false === $dryRun) {

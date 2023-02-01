@@ -24,7 +24,7 @@ abstract class HelmCommand extends Command
     protected $helmClient;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function configure(): void
     {
@@ -34,7 +34,7 @@ abstract class HelmCommand extends Command
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
@@ -49,10 +49,10 @@ abstract class HelmCommand extends Command
         }
 
         // Home directory fix
-        $kubeConfigPath = str_replace('~/', getenv('HOME') . '/', $kubeConfigPath);
+        $kubeConfigPath = str_replace('~/', getenv('HOME').'/', $kubeConfigPath);
 
         $namespace = $this->projectConfiguration->get('kubernetes.namespace');
-        if ($input->getOption('namespace')){
+        if ($input->getOption('namespace')) {
             $namespace = $input->getOption('namespace');
         }
 

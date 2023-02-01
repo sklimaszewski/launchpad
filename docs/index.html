@@ -5,6 +5,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="google-site-verification" content="lVBDGjSjqXMMYmwo5s4M1zYByK3mfT9sdBQhpQiQ9vk" />
+
     <link rel="shortcut icon" href="https://www.symfony.com/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -48,9 +51,9 @@
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="https://ezsystems.github.io/launchpad/" target="_blank">eZ Launchpad</a></li>
+                        <li><a href="https://symfony.com/doc/current/index.html" target="_blank">Symfony</a></li>
                         <li>
-                            <a href="https://github.com/sklimaszewski/launchpad" target="_blank">
+                            <a href="https://github.com/sklimaszewski/symfony-launchpad" target="_blank">
                                 Github
                                 <i class="fa fa-github" aria-hidden="true"></i>
                             </a>
@@ -63,11 +66,12 @@
 
     <div class="container">
         <h1><i class="fa fa-rocket fa-2x" aria-hidden="true"></i>Symfony Launchpad</h1>
-        <p>Symfony Launchpad is a CLI tool to start a Symfony project in 5 min on top of a full Docker stack.</p>
-        <p>It is fully based on eZ Launchpad created for eZ Platform / Ibexa installations.</p>
+        <p>Symfony Launchpad is a CLI tool to start and maintain a Symfony project in less than 5 minutes on top of a full Docker stack.</p>
+        <p>It is based on eZ Launchpad created for eZ Platform / Ibexa installations.</p>
 
         <div class="alert alert-success" role="alert">
-            <p><i class="fa fa-code" aria-hidden="true"></i> You will end up with a full
+            <p>
+                <i class="fa fa-code" aria-hidden="true"></i> You will end up with a full
                 <strong>Docker stack</strong> where the source-code is on your host for you
                 <strong>to start coding</strong> right away!
             </p>
@@ -119,7 +123,7 @@
             <p>When you have installed Symfony Launchpad (<em>~/sf</em>) you can start enjoying the feature.</p>
             <p>Symfony Launchpad provides 2 main features:</p>
             <ul>
-                <li><strong>Initialization</strong> of a brand new Symfony project (on top of Docker)</li>
+                <li><strong>Initialization</strong> of a brand-new Symfony project (on top of Docker)</li>
                 <li><strong>Create</strong> the Docker Stack related to the current directory.</li>
             </ul>
 
@@ -134,9 +138,9 @@
 
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="initstack">
-                    <h3><i class="fa fa-play" aria-hidden="true"></i> Init<small>ialization</small></h3>
+                    <h3><i class="fa fa-play" aria-hidden="true"></i> Initialization</h3>
                     <p>
-                        That is the from scratch installation. You need to do that when you have nothing and you want to start a new project based on Symfony.
+                        That is the "from scratch" installation. You need to do that when you have nothing and you want to start a new project based on Symfony.
                     </p>
                     <div class="highlight">
                         <button class="to-clipboard">
@@ -150,7 +154,7 @@
                     <div class="alert alert-info" role="alert">
                         <p>
                             <i class="fa fa-apple" aria-hidden="true"></i> Mac OS X users will have a wizard to set up
-                            <a href='#mac-tips' class='alert-link'>NFS</a>.
+                            <a href='#mac-tips' class='alert-link'>NFS</a> if needed.
                         </p>
                     </div>
                     <p>At the end of the procedure those steps will be done for you:</p>
@@ -226,11 +230,25 @@
             </p>
             <div>
                 <h3>Setup</h3>
-                <p>@TODO</p>
+                <p>
+                    Kubernetes deployment is done via <a href="https://helm.sh/" target="_blank">Helm</a>. All chart files are configurable in kubernetes/dev/helm directory.
+                </p>
+                <p>
+                    This is a basic Kubernetes cluster configuration needed for each Symfony Lauchpad installation:
+                </p>
+                <pre>$ cat .sflaunchpad.yml
+                <code>
+kubernetes:
+    kubeconfig: (path to kubeconfig file)
+    registry:
+        name: (image registry URL where built images are pushed)
+        username: (registry login)
+        password: (registry password)
+    namespace: (cluster namespace where application should be deployed to)</code></pre>
 
                 <h3>Deploy</h3>
                 <p>
-                    After your local configuration is done, you can build image. Push to the registry and deploy using custom <b>Helm Chart</b>.
+                    Once your local configuration is done, you can build image. Push to the registry and deploy using your previously configured <b>Helm Chart</b>.
                 </p>
                 <div class="highlight">
                     <button class="to-clipboard">
@@ -255,9 +273,8 @@
 
             <p>Depending on the initialization, you might have more or less services, but here is the most common stack.</p>
 
-            <h3>LEMP: Linux Nginx Mysql/MariaDB PHP-FPM</h3>
-            <img src="images/puml/architecture.png" class="img-responsive" />
-
+            <h4>LEMP: Linux Nginx MySQL/MariaDB PHP-FPM</h4>
+            <img alt="LEMP stack: Linux + Nginx + MySQL/MariaDB + PHP-FPM" src="images/puml/architecture.png" class="img-responsive" />
         </div>
 
         <h2 id="commands"><i class="fa fa-terminal" aria-hidden="true"></i> Common Commands</h2>
@@ -306,16 +323,18 @@ Available commands:
         </div>
         <h2 id="home"><i class="fa fa-home" aria-hidden="true"></i> Global configuration</h2>
         <div>
-            <p>Because every project can share stuff and because you might want the same configuration everywhere, Symfony Launchpad reads a configuration file in your HOME directory.
+            <p>
+                Because every project can share stuff and because you might want the same configuration everywhere, Symfony Launchpad reads a configuration file in your HOME directory.
             </p>
-            <p>This configuration file is <em>~/sflaunchpad/sf.yml</em>. Here is a full example:
+            <p>
+                This configuration file is <em>~/sflaunchpad/sf.yml</em>. Here is a full example:
             </p>
             <div class="highlight">
                 <button class="to-clipboard">
                     <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
                 </button>
                 <pre><code>provisioning:
-    folder_name: myprovisioningfoldername
+    folder_name: docker
 docker:
     compose_filename: docker-compose.yml
     network_name: symfony
@@ -329,16 +348,16 @@ kubernetes:
         username: user-token
         password: user-token-pass</code></pre>
             </div>
-
-            <p>Note that this configuration is global and won't be included in the project (i.e. in the CVS repository). But it will be including in your local stack.
+            <p>
+                Note that this configuration is global and won't be included in the project (i.e. in the CVS repository). But it will be including in your local stack.
             </p>
-            <p><em>docker</em> section is described in the next section.</p>
-
+            <p><em><b>docker</b></em> section is described in the next section.</p>
         </div>
 
         <h2 id="mac-tips"><i class="fa fa-apple" aria-hidden="true"></i> macOS - Tips</h2>
         <div>
-            <p>When it comes to share a folder from the Host (your Mac) to containers,
+            <p>
+                When it comes to share a folder from the Host (your Mac) to containers,
                 <em>Docker for Mac</em> is slow (at least for now). To manage this performance issue,
                 <strong>there is a workaround</strong>: NFS! Yes, it might be odd, but NFS is faster than the default mount. Before the last version of Docker for Mac, we were using
                 <a href="https://github.com/IFSight/d4m-nfs">D4M</a>, but since Docker for Mac 18.03 we can directly mount the host as a volume from the container.
@@ -393,7 +412,7 @@ kubernetes:
                 <button class="to-clipboard">
                     <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
                 </button>
-                <pre># provisioning/dev/docker-compose.yml<code>
+                <pre># docker/dev/docker-compose.yml<code>
 engine:
     environment:
         - "SYMFONY_TMP_DIR=/tmp/symfonycache/"</code></pre>
@@ -408,9 +427,7 @@ engine:
             </div>
         </div>
 
-
         <p>Enjoy!</p>
-
     </div>
 
     <footer>
@@ -418,7 +435,7 @@ engine:
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        <p>Copyright © 2022. All rights reserved.</p>
+                        <p>Copyright © 2023. All rights reserved.</p>
                     </div>
                 </div>
             </div>

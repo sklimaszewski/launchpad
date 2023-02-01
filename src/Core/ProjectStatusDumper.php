@@ -95,7 +95,7 @@ class ProjectStatusDumper
             $this->io->writeln(
                 "<fg=white;options=bold>{$title}: </>".
                 str_pad('', 1, "\t").
-                "{$proto}://localhost:<fg=white;options=bold>" . intval($portPrefix . $port) . "</>{$suffix}"
+                "{$proto}://localhost:<fg=white;options=bold>".intval($portPrefix.$port)."</>{$suffix}"
             );
         };
         $this->io->title('Service Access');

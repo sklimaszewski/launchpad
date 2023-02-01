@@ -4,7 +4,7 @@ SF_HOME="$HOME/.sflaunchpad"
 mkdir -p $SF_HOME
 cd $SF_HOME
 
-php -r "copy('https://sklimaszewski.github.io/launchpad/installer', 'installer');"
+php -r "copy('https://sklimaszewski.github.io/symfony-launchpad/installer', 'installer');"
 php installer
 rm installer
 

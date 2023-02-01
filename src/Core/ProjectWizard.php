@@ -186,7 +186,7 @@ END;
         };
 
         $message = 'What is your preferred name for the <fg=yellow;options=bold>kubernetes folder</>?';
-        $errorMessage = "Please specify correct filepath.";
+        $errorMessage = 'Please specify correct filepath.';
 
         return $this->io->askQuestion($this->getQuestion($message, $default, $validator, $errorMessage));
     }
@@ -227,11 +227,11 @@ END;
         $default = $this->projectConfiguration->get('kubernetes.registry.name');
 
         $validator = function ($value) {
-            return substr($value, 0, 4 ) !== 'http' && $value;
+            return 'http' !== substr($value, 0, 4) && $value;
         };
 
         $message = 'What is your <fg=yellow;options=bold>Container Registry</> used for storing images?';
-        $errorMessage = "The Container Registry cannot start with HTTP(S).";
+        $errorMessage = 'The Container Registry cannot start with HTTP(S).';
 
         $name = $this->io->askQuestion($this->getQuestion($message, $default, $validator, $errorMessage));
         $username = $this->io->askQuestion($this->getQuestion('What is your registry username?'));

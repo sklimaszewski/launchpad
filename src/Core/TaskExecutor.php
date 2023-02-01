@@ -120,10 +120,10 @@ class TaskExecutor
 
         $args = [];
         foreach ($this->projectConfiguration->get('docker.storage_dirs') as $name => $path) {
-            $args[] = $name . '=' . trim($path, '/');
+            $args[] = $name.'='.trim($path, '/');
         }
 
-        return $this->execute("{$recipe}.bash " . implode(' ', $args));
+        return $this->execute("{$recipe}.bash ".implode(' ', $args));
     }
 
     public function importData(): Process
@@ -133,10 +133,10 @@ class TaskExecutor
 
         $args = [];
         foreach ($this->projectConfiguration->get('docker.storage_dirs') as $name => $path) {
-            $args[] = $name . '=' . trim($path, '/');
+            $args[] = $name.'='.trim($path, '/');
         }
 
-        return $this->execute("{$recipe}.bash" . implode(' ', $args));
+        return $this->execute("{$recipe}.bash".implode(' ', $args));
     }
 
     public function runSymfomyCommand(string $arguments): Process

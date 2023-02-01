@@ -4,7 +4,7 @@ Symfony Launchpad is a CLI tool to start a Symfony project in 5 min on top of a 
 
 It is fully based on eZ Launchpad created for eZ Platform / Ibexa installations.
 
-You can find the full documentation here: https://sklimaszewski.github.io/launchpad
+You can find the full documentation here: https://sklimaszewski.github.io/symfony-launchpad
 
 ## Changes added to the base eZ Launchpad
 

@@ -5,7 +5,7 @@
  * @license   For full copyright and license information view LICENSE file distributed with this source code.
  */
 
-$repo = $_SERVER['argv'][1] ?? 'sklimaszewski/launchpad';
+$repo = $_SERVER['argv'][1] ?? 'sklimaszewski/symfony-launchpad';
 
 $context = stream_context_create(
     [

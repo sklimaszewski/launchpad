@@ -14,7 +14,12 @@ final class Enter extends KubernetesCommand
     {
         parent::configure();
         $this->setName('k8s:enter')->setDescription('Enter in a container.');
-        $this->addOption('container', null, InputOption::VALUE_OPTIONAL, 'Container name. If omitted, the first container in the pod will be chosen.');
+        $this->addOption(
+            'container',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Container name. If omitted, the first container in the pod will be chosen.'
+        );
         $this->addArgument('pod', InputArgument::REQUIRED, 'Pod to enter in');
         $this->addArgument('shell', InputArgument::OPTIONAL, 'Command to enter in', 'bash');
     }

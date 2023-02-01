@@ -135,6 +135,6 @@ class Project
 
     public function getKubernetesHelmPath(): string
     {
-        return "{$this->get('kubernetes.folder_name')}/" . "{$this->environment}/helm";
+        return "{$this->get('kubernetes.folder_name')}/"."{$this->environment}/helm";
     }
 }

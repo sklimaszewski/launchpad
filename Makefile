@@ -42,6 +42,8 @@ clean: ## Removes the vendors, and caches
 	rm -rf vendor
 	rm -rf symfony
 	rm -rf docker
+	rm -rf kubernetes
+	rm -rf data
 	rm -f sfinstall.bash
 
 

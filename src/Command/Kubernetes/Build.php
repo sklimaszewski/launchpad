@@ -16,7 +16,13 @@ final class Build extends DockerCommand
     {
         $this->setName('k8s:build')->setDescription('Build new image for a given container.');
         $this->addArgument('container', InputArgument::REQUIRED, 'Container name to build image');
-        $this->addOption('tag', 't', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Image tag', ['latest']);
+        $this->addOption(
+            'tag',
+            't',
+            InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+            'Image tag',
+            ['latest']
+        );
         $this->addOption('cache-from', null, InputOption::VALUE_REQUIRED, 'Build image from cache');
     }
 

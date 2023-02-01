@@ -24,7 +24,7 @@ abstract class KubernetesCommand extends Command
     protected $kubectlClient;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function configure(): void
     {
@@ -33,7 +33,7 @@ abstract class KubernetesCommand extends Command
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
@@ -45,7 +45,7 @@ abstract class KubernetesCommand extends Command
         }
 
         // Home directory fix
-        $kubeConfigPath = str_replace('~/', getenv('HOME') . '/', $kubeConfigPath);
+        $kubeConfigPath = str_replace('~/', getenv('HOME').'/', $kubeConfigPath);
 
         $fs = new Filesystem();
         if (!$fs->exists($kubeConfigPath)) {
@@ -53,7 +53,7 @@ abstract class KubernetesCommand extends Command
         }
 
         $namespace = $this->projectConfiguration->get('kubernetes.namespace');
-        if ($input->getOption('namespace')){
+        if ($input->getOption('namespace')) {
             $namespace = $input->getOption('namespace');
         }
 

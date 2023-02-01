@@ -45,7 +45,7 @@ class Helm
     {
         $flags = [
             'install' => '',
-            'values' => rtrim($this->getHelmChart(), '/') . '/values.yaml',
+            'values' => rtrim($this->getHelmChart(), '/').'/values.yaml',
             'create-namespace' => '',
             'namespace' => $this->getNamespace(),
             'set-string' => $this->getChartValues($tag),
@@ -81,7 +81,9 @@ class Helm
                 $this->getContainerRegistryHost() => [
                     'username' => $this->options['registry-username'],
                     'password' => $this->options['registry-password'],
-                    'auth' => base64_encode($this->options['registry-username'] . ':' . $this->options['registry-password']),
+                    'auth' => base64_encode(
+                        $this->options['registry-username'].':'.$this->options['registry-password']
+                    ),
                 ],
             ],
         ]));
@@ -89,7 +91,7 @@ class Helm
 
     protected function getContainerRegistryHost(): string
     {
-        return parse_url('//' . $this->options['registry-name'], PHP_URL_HOST);
+        return parse_url('//'.$this->options['registry-name'], PHP_URL_HOST);
     }
 
     protected function getNamespace(): string
@@ -132,12 +134,12 @@ class Helm
             if (is_array($value)) {
                 $variables = [];
                 foreach ($value as $subKey => $subValue) {
-                    $variables[] = $subKey . '=' . $subValue;
+                    $variables[] = $subKey.'='.$subValue;
                 }
                 $value = implode(',', $variables);
             }
 
-            $args[] = trim('--' . $key . ' ' . $value);
+            $args[] = trim('--'.$key.' '.$value);
         }
 
         return implode(' ', $args);

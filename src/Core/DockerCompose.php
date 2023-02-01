@@ -106,9 +106,15 @@ class DockerCompose
                     function ($value) use ($majorVersion) {
                         if (!$this->hasService('redis')) {
                             if (
-                                preg_match(
-                                    '/(CUSTOM_CACHE_POOL|CACHE_HOST|CACHE_POOL|CACHE_DSN|CACHE_REDIS_PORT)/',
-                                    $value
+                                in_array(
+                                    trim(strtoupper($value)),
+                                    [
+                                        'CUSTOM_CACHE_POOL',
+                                        'CACHE_HOST',
+                                        'CACHE_POOL',
+                                        'CACHE_DSN',
+                                        'CACHE_REDIS_PORT',
+                                    ]
                                 )
                             ) {
                                 return false;
@@ -116,14 +122,32 @@ class DockerCompose
                         }
 
                         if ($majorVersion <= 3) {
-                            if (preg_match('/(DATABASE_URL|MAILER_DSN)/', $value)) {
+                            if (
+                                in_array(
+                                    trim(strtoupper($value)),
+                                    [
+                                        'DATABASE_URL',
+                                        'MAILER_DSN',
+                                    ]
+                                )
+                            ) {
                                 return false;
                             }
                         } else {
                             if (
-                                preg_match(
-                                    '/(DATABASE_PLATFORM|DATABASE_DRIVER|DATABASE_USER|DATABASE_NAME|DATABASE_PASSWORD|DATABASE_HOST|MAILER_TRANSPORT|MAILER_HOST|MAILER_PORT)/',
-                                    $value
+                                in_array(
+                                    trim(strtoupper($value)),
+                                    [
+                                        'DATABASE_PLATFORM',
+                                        'DATABASE_DRIVER',
+                                        'DATABASE_USER',
+                                        'DATABASE_NAME',
+                                        'DATABASE_PASSWORD',
+                                        'DATABASE_HOST',
+                                        'MAILER_TRANSPORT',
+                                        'MAILER_HOST',
+                                        'MAILER_PORT',
+                                    ]
                                 )
                             ) {
                                 return false;

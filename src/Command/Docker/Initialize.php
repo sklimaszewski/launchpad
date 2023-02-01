@@ -59,6 +59,7 @@ class Initialize extends Command
     private function getSymfonyMajorVersion(InputInterface $input): int
     {
         $normalizedVersion = trim($input->getArgument('version'), 'v');
+
         return (int) str_replace(['^', '~'], '', $normalizedVersion);
     }
 
@@ -74,7 +75,14 @@ class Initialize extends Command
         $wizard = new ProjectWizard($this->io, $this->projectConfiguration);
 
         // Ask the questions
-        [$networkName, $networkPort, $selectedServices, $provisioningName, $composeFileName, $kubernetesConfig] = $wizard(
+        [
+            $networkName,
+            $networkPort,
+            $selectedServices,
+            $provisioningName,
+            $composeFileName,
+            $kubernetesConfig
+        ] = $wizard(
             $compose
         );
 

@@ -21,7 +21,7 @@ abstract class DockerCommand extends Command
     protected $dockerClient;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
