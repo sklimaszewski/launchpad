@@ -206,7 +206,8 @@
                     </div>
 
 
-                    <p>If you want to know if your project is Symfony Launchpad ready, you can just check the existance of
+                    <p>
+                        If you want to know if your project is Symfony Launchpad ready, you can just check the existance of
                         <em>.sflaunchpad.yml</em> at the root directory of your project.
                     </p>
                     <p>To create the local stack the command is then</p>
@@ -324,11 +325,16 @@ Available commands:
         <h2 id="home"><i class="fa fa-home" aria-hidden="true"></i> Global configuration</h2>
         <div>
             <p>
-                Because every project can share stuff and because you might want the same configuration everywhere, Symfony Launchpad reads a configuration file in your HOME directory.
+                Because every project can share stuff and because you might want the same configuration everywhere, Symfony Launchpad reads a configuration file in your HOME directory as well as project directory.
             </p>
             <p>
-                This configuration file is <em>~/sflaunchpad/sf.yml</em>. Here is a full example:
+                This configuration file loading hierarchy is the following (next configuration file is overriding values from a previous one):
             </p>
+            <ol>
+                <li><em>~/.sflaunchpad/sf.yml</em> - home directory</li>
+                <li><em>.sflaunchpad.yml</em> - project directory</li>
+                <li><em>.sflaunchpad.local.yml</em> - project directory (shouldn't be stored in CVS repository)</li>
+            </ol>
             <div class="highlight">
                 <button class="to-clipboard">
                     <i class="fa fa-clipboard" aria-hidden="true"></i> Copy
@@ -337,8 +343,25 @@ Available commands:
     folder_name: docker
 docker:
     compose_filename: docker-compose.yml
-    network_name: symfony
+    network_name: default-sflaunchpad
     network_prefix_port: 0
+    host_machine_mapping: ~
+    host_composer_cache_dir: ~
+    storage_dirs:
+        public_storage: symfony/public/storage
+    variables:
+        RUNNING_ENV: docker
+        CUSTOM_DOCKER_ENV: 1
+composer:
+    http_basic:
+        hostname:
+            host: www.hostname.com
+            login: login
+            password: pass
+    token:
+        github:
+            host: github.com
+            value: tokenvalue
 kubernetes:
     folder_name: kubernetes
     kubeconfig: /Users/ubuntu/kubeconfig.yml

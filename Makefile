@@ -38,6 +38,7 @@ phar: ## Build the box locally (bypass the PROD)
 clean: ## Removes the vendors, and caches
 	rm -f .php_cs.cache
 	rm -f .sflaunchpad.yml
+	rm -f .sflaunchpad.local.yml
 	rm -f .dockerignore
 	rm -rf vendor
 	rm -rf symfony

@@ -46,8 +46,8 @@ class Initialize extends Command
         parent::configure();
         $this->setName('docker:initialize')->setDescription('Initialize the project and all the services.');
         $this->setAliases(['docker:init', 'initialize', 'init']);
-        $this->addArgument('repository', InputArgument::OPTIONAL, 'Symfony Repository', 'symfony/website-skeleton');
-        $this->addArgument('version', InputArgument::OPTIONAL, 'Symfony Version', '5.4');
+        $this->addArgument('repository', InputArgument::OPTIONAL, 'Symfony Repository', 'symfony/skeleton');
+        $this->addArgument('version', InputArgument::OPTIONAL, 'Symfony Version', '6.2.*');
         $this->addArgument(
             'initialdata',
             InputArgument::OPTIONAL,
@@ -152,9 +152,10 @@ class Initialize extends Command
         // Clean the Compose File
         $compose->removeUselessEnvironmentsVariables($majorVersion);
 
-        // Get the Payload README.md & .dockerignore
+        // Get the Payload README.md, .dockerignore, .gitignore
         $fs->copy("{$this->getPayloadDir()}/docker/README.md", "{$provisioningFolder}/README.md");
         $fs->copy("{$this->getPayloadDir()}/docker/.dockerignore", "{$provisioningFolder}/.dockerignore");
+        $fs->copy("{$this->getPayloadDir()}/.gitignore", "{$this->projectPath}/.gitignore");
 
         // create the local configurations
         $localConfigurations = [
@@ -174,7 +175,7 @@ class Initialize extends Command
             ]);
         }
 
-        $this->projectConfiguration->setMultiLocal($localConfigurations);
+        $this->projectConfiguration->setMultiProject($localConfigurations);
 
         // Create the docker Client
         $options = [
@@ -185,8 +186,9 @@ class Initialize extends Command
             'provisioning-folder-name' => $provisioningName,
             'host-machine-mapping' => $this->projectConfiguration->get('docker.host_machine_mapping'),
             'composer-cache-dir' => $this->projectConfiguration->get('docker.host_composer_cache_dir'),
+            'env-variables' => $this->projectConfiguration->get('docker.variables'),
         ];
-        $dockerClient = new DockerComposeClient($options, new ProcessRunner(), $this->optimizer);
+        $dockerClient = new DockerComposeClient($options, new ProcessRunner());
         $this->projectStatusDumper->setDockerClient($dockerClient);
 
         // do the real work

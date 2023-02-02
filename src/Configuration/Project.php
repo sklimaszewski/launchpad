@@ -23,6 +23,11 @@ class Project
     /**
      * @var string
      */
+    protected $projectFilePath;
+
+    /**
+     * @var string
+     */
     protected $localFilePath;
 
     /**
@@ -35,9 +40,10 @@ class Project
      */
     protected $environment;
 
-    public function __construct(string $globalFilePath, string $localFilePath, array $configurations)
+    public function __construct(string $globalFilePath, string $projectFilePath, string $localFilePath, array $configurations)
     {
         $this->globalFilePath = $globalFilePath;
+        $this->projectFilePath = $projectFilePath;
         $this->localFilePath = $localFilePath;
         $this->configurations = $configurations;
     }
@@ -63,6 +69,11 @@ class Project
         return $this->configurations[$name] ?? null;
     }
 
+    public function setProject(string $name, $value): void
+    {
+        $this->set([$name => $value], 'project');
+    }
+
     public function setLocal(string $name, $value): void
     {
         $this->set([$name => $value], 'local');
@@ -71,6 +82,11 @@ class Project
     public function setGlobal(string $name, $value): void
     {
         $this->set([$name => $value], 'global');
+    }
+
+    public function setMultiProject(array $keyValues): void
+    {
+        $this->set($keyValues, 'project');
     }
 
     public function setMultiLocal(array $keyValues): void
@@ -93,7 +109,16 @@ class Project
      */
     protected function set(array $keyValues, string $where = 'global'): void
     {
-        $filePath = 'global' === $where ? $this->globalFilePath : $this->localFilePath;
+        switch ($where) {
+            case 'global':
+                $filePath = $this->globalFilePath;
+                break;
+            case 'project':
+                $filePath = $this->projectFilePath;
+                break;
+            default:
+                $filePath = $this->localFilePath;
+        }
 
         $fs = new Filesystem();
         $config = $fs->exists($filePath) ? Yaml::parse(file_get_contents($filePath)) : [];
@@ -125,7 +150,7 @@ class Project
 
     public function getDockerCompose(): DockerCompose
     {
-        $projectPath = \dirname($this->localFilePath);
+        $projectPath = \dirname($this->projectFilePath);
 
         return new DockerCompose(
             "{$projectPath}/"."{$this->get('provisioning.folder_name')}/".

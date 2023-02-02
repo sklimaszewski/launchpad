@@ -25,6 +25,10 @@ class ApplicationFactory
     ): Application {
         \define('SF_HOME', getenv('HOME').'/.sflaunchpad');
         \define('SF_ON_OSX', 'Darwin' === $operatingSystem);
+        \define(
+            'SF_ON_ARM64',
+            false !== stripos(php_uname('m'), 'aarch64') || false !== stripos(php_uname('m'), 'arm64')
+        );
         $container = new ContainerBuilder();
         $container->addCompilerPass(new CommandPass($env));
         $container->addCompilerPass(new RegisterListenersPass());

@@ -1,5 +1,5 @@
 ## BASE IMAGE
-FROM sklimaszewski/php-symfony:7.4-fpm-mysql as base
+FROM sklimaszewski/php-symfony:8.1-fpm-mysql as base
 
 WORKDIR /var/www/html/project/symfony
 

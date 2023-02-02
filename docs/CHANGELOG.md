@@ -2,6 +2,16 @@
 
 ## CHANGELOG
 
+### 2.0.0
+- Add support for PHP8+ and Symfony 6
+- Removed NFS support for MacOS
+- Support additional docker-compose.yml files for MacOS and ARM64
+- Better configuration by separating project into 2 files - .sflaunchpad.yml and .sflaunchpad.local.yml
+- Allow configuring docker ENV variables from launchpad YAML file
+- Generate .gitignore automatically
+- Fixing storage import
+- Updating documentation
+
 ### 1.1.1
 - Updating documentation
 

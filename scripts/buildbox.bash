@@ -16,12 +16,12 @@ if [ ! -f composer.phar ]; then
 fi
 if [ ! -f box.phar ]; then
     echoInfo "Install box.phar before..."
-    curl -LSs https://box-project.github.io/box2/installer.php | $PHP
+    curl -LSs -o box.phar https://github.com/box-project/box/releases/download/4.2.0/box.phar
     echoAction "Building now..."
 fi
 
 $PHP composer.phar install --no-dev > /dev/null 2>&1
-$PHP -d "phar.readonly=false" box.phar build -vvv
+$PHP -d "phar.readonly=false" box.phar compile -vvv
 $PHP composer.phar install > /dev/null 2>&1
 
 echoSuccess "Done."

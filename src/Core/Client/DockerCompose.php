@@ -12,8 +12,6 @@ namespace Symfony\Launchpad\Core\Client;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Process\Process;
-use Symfony\Launchpad\Core\OSX\Optimizer\NFSVolumes;
-use Symfony\Launchpad\Core\OSX\Optimizer\OptimizerInterface;
 use Symfony\Launchpad\Core\ProcessRunner;
 
 class DockerCompose
@@ -28,12 +26,7 @@ class DockerCompose
      */
     protected $runner;
 
-    /**
-     * @var OptimizerInterface
-     */
-    protected $optimizer;
-
-    public function __construct(array $options, ProcessRunner $runner, ?OptimizerInterface $optimizer = null)
+    public function __construct(array $options, ProcessRunner $runner)
     {
         $resolver = new OptionsResolver();
         $defaults = [
@@ -45,6 +38,7 @@ class DockerCompose
             'host-machine-mapping' => null,
             'provisioning-folder-name' => null,
             'composer-cache-dir' => null,
+            'env-variables' => [],
         ];
         $resolver->setDefaults($defaults);
         $resolver->setRequired(array_keys($defaults));
@@ -56,9 +50,9 @@ class DockerCompose
         $resolver->setAllowedTypes('provisioning-folder-name', 'string');
         $resolver->setAllowedTypes('network-prefix-port', 'int');
         $resolver->setAllowedTypes('host-machine-mapping', ['null', 'string']);
+        $resolver->setAllowedTypes('env-variables', 'array');
         $this->options = $resolver->resolve($options);
         $this->runner = $runner;
-        $this->optimizer = $optimizer;
     }
 
     protected function getComposeFileName(): string
@@ -183,26 +177,32 @@ class DockerCompose
             $composerCacheDir = $this->options['composer-cache-dir'];
         }
 
-        return
-            [
-                'PROJECTNETWORKNAME' => $this->getNetworkName(),
-                'PROJECTPORTPREFIX' => $this->getNetworkPrefixPort(),
-                'PROJECTCOMPOSEPATH' => MacOSPatherize($projectComposePath),
-                'PROVISIONINGFOLDERNAME' => $this->getProvisioningFolderName(),
-                'HOST_COMPOSER_CACHE_DIR' => MacOSPatherize($composerCacheDir),
-                'DEV_UID' => getmyuid(),
-                'DEV_GID' => getmygid(),
-                // In container composer cache directory - (will be mapped to host:composer-cache-dir)
-                'COMPOSER_CACHE_DIR' => '/var/www/composer_cache',
-                // where to mount the project root directory in the container - (will be mapped to host:project-path)
-                'PROJECTMAPPINGFOLDER' => $this->getProjectPathContainer(),
-                // pass the DOCKER native vars for compose
-                'DOCKER_HOST' => getenv('DOCKER_HOST'),
-                'DOCKER_CERT_PATH' => getenv('DOCKER_CERT_PATH'),
-                'DOCKER_TLS_VERIFY' => getenv('DOCKER_TLS_VERIFY'),
-                'PATH' => getenv('PATH'),
-                'XDEBUG_ENABLED' => false === getenv('XDEBUG_ENABLED') ? '0' : '1',
-            ];
+        $variables = [
+            'PROJECTNETWORKNAME' => $this->getNetworkName(),
+            'PROJECTPORTPREFIX' => $this->getNetworkPrefixPort(),
+            'PROJECTCOMPOSEPATH' => MacOSPatherize($projectComposePath),
+            'PROVISIONINGFOLDERNAME' => $this->getProvisioningFolderName(),
+            'HOST_COMPOSER_CACHE_DIR' => MacOSPatherize($composerCacheDir),
+            'DEV_UID' => getmyuid(),
+            'DEV_GID' => getmygid(),
+            // In container composer cache directory - (will be mapped to host:composer-cache-dir)
+            'COMPOSER_CACHE_DIR' => '/var/www/composer_cache',
+            // where to mount the project root directory in the container - (will be mapped to host:project-path)
+            'PROJECTMAPPINGFOLDER' => $this->getProjectPathContainer(),
+            // pass the DOCKER native vars for compose
+            'DOCKER_HOST' => getenv('DOCKER_HOST'),
+            'DOCKER_CERT_PATH' => getenv('DOCKER_CERT_PATH'),
+            'DOCKER_TLS_VERIFY' => getenv('DOCKER_TLS_VERIFY'),
+            'PATH' => getenv('PATH'),
+            'XDEBUG_ENABLED' => false === getenv('XDEBUG_ENABLED') ? '0' : '1',
+        ];
+
+        foreach ($this->options['env-variables'] as $variable => $value) {
+            $variables[strtoupper($variable)] = $value;
+        }
+
+        return $variables;
+
     }
 
     /**
@@ -213,13 +213,23 @@ class DockerCompose
         $stringArgs = implode(' ', $args);
         $command = "docker-compose -p {$this->getNetworkName()} -f {$this->getComposeFileName()}";
 
-        if ($this->optimizer instanceof NFSVolumes) {
-            $osxExtension = str_replace('.yml', '-osx.yml', $this->getComposeFileName());
-            $fs = new Filesystem();
+        $fs = new Filesystem();
+
+        if (SF_ON_OSX) {
+            $osxExtension = str_replace('.yml', '.osx.yml', $this->getComposeFileName());
             if ($fs->exists($osxExtension)) {
                 $command .= " -f {$osxExtension}";
             }
         }
+
+        if (SF_ON_ARM64) {
+            $arm64Extension = str_replace('.yml', '.arm64.yml', $this->getComposeFileName());
+            $fs = new Filesystem();
+            if ($fs->exists($arm64Extension)) {
+                $command .= " -f {$arm64Extension}";
+            }
+        }
+
         $fullCommand = trim("{$command} {$action} {$stringArgs} {$service} ");
 
         if (false === $dryRun) {

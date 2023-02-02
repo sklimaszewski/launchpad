@@ -64,7 +64,15 @@ echo "Installing Symfony ($REPO:$VERSION) in the container"
 
 # Install
 cd symfony
-$COMPOSER create-project --no-interaction $REPO . ^$VERSION
+if [[ -z "$VERSION" ]]; then
+    $COMPOSER create-project --no-interaction $REPO .
+else
+    $COMPOSER create-project --no-interaction $REPO:$VERSION .
+fi
+
+if [[ "$REPO" == "symfony/skeleton" ]]; then
+    composer require --no-interaction webapp
+fi
 
 MAJOR_VERSION=`echo $VERSION | cut -c 1-2`
 

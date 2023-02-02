@@ -136,7 +136,7 @@ class TaskExecutor
             $args[] = $name.'='.trim($path, '/');
         }
 
-        return $this->execute("{$recipe}.bash".implode(' ', $args));
+        return $this->execute("{$recipe}.bash ".implode(' ', $args));
     }
 
     public function runSymfomyCommand(string $arguments): Process

@@ -15,7 +15,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Launchpad\Configuration\Project as ProjectConfiguration;
-use Symfony\Launchpad\Core\OSX\Optimizer\OptimizerInterface;
 
 abstract class Command extends BaseCommand
 {
@@ -43,11 +42,6 @@ abstract class Command extends BaseCommand
      * @var Collection
      */
     protected $requiredRecipes;
-
-    /**
-     * @var OptimizerInterface
-     */
-    protected $optimizer;
 
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
@@ -93,10 +87,5 @@ abstract class Command extends BaseCommand
         }
 
         return $this->requiredRecipes;
-    }
-
-    public function setOptimizer(OptimizerInterface $optimizer): void
-    {
-        $this->optimizer = $optimizer;
     }
 }

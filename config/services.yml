@@ -28,13 +28,3 @@ services:
             - { name: kernel.event_listener, event: console.terminate, method: onTerminateAction }
 
     Symfony\Launchpad\Core\ProjectStatusDumper: ~
-
-    Symfony\Launchpad\Listener\OSXListener:
-        class:
-        arguments: [!tagged sflaunchpad.osx.optimizer]
-        tags:
-            - { name: kernel.event_listener, event: console.command, method: onCommandAction }
-
-    # OSX OPTIMIZER
-    Symfony\Launchpad\Core\OSX\Optimizer\NFSVolumes:
-        tags: [sflaunchpad.osx.optimizer]

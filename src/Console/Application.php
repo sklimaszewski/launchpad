@@ -126,11 +126,18 @@ class Application extends BaseApplication
             }
         }
 
+        // Load the project values and OVERRIDE
+        $projectFilePath = $projectPath.'/.sflaunchpad.yml';
+        if ($fs->exists($projectFilePath)) {
+            $configs[] = Yaml::parse(file_get_contents($projectFilePath));
+        }
+
         // Load the local values and OVERRIDE
-        $localFilePath = $projectPath.'/.sflaunchpad.yml';
+        $localFilePath = $projectPath.'/.sflaunchpad.local.yml';
         if ($fs->exists($localFilePath)) {
             $configs[] = Yaml::parse(file_get_contents($localFilePath));
         }
+
         $processor = new Processor();
         $configuration = new Configuration();
         $processedConfiguration = $processor->processConfiguration(
@@ -151,6 +158,7 @@ class Application extends BaseApplication
                 ProjectConfiguration::class,
                 [
                     $globalFilePath,
+                    $projectFilePath,
                     $localFilePath,
                     $processedConfiguration,
                 ]

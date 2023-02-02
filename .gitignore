@@ -20,6 +20,7 @@
 /kubernetes
 /symfony
 /.sflaunchpad.yml
+/.sflaunchpad.local.yml
 
 # CI stuff
 /build-key.pem

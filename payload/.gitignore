@@ -1,0 +1,15 @@
+.php~
+.idea
+.DS_Store
+*~
+*.bak
+._*
+~*
+
+.sflaunchpad.local.yml
+
+/data/*
+!/data/.gitkeep
+
+# we do not want that at the root (usually generated when developing Symfony Launchpad)
+/*.bash
