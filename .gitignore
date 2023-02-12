@@ -21,6 +21,8 @@
 /symfony
 /.sflaunchpad.yml
 /.sflaunchpad.local.yml
+/.ezlaunchpad.yml
+/.ezlaunchpad.local.yml
 
 # CI stuff
 /build-key.pem

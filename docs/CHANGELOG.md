@@ -2,6 +2,10 @@
 
 ## CHANGELOG
 
+### 3.0.0
+- Updating to docker compose v2
+- Add legacy support for abandoned eZLaunchpad stack
+
 ### 2.0.0
 - Add support for PHP8+ and Symfony 6
 - Removed NFS support for MacOS

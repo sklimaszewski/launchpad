@@ -211,7 +211,7 @@ class DockerCompose
     protected function perform(string $action, string $service = '', array $args = [], bool $dryRun = false)
     {
         $stringArgs = implode(' ', $args);
-        $command = "docker-compose -p {$this->getNetworkName()} -f {$this->getComposeFileName()}";
+        $command = "docker compose -p {$this->getNetworkName()} -f {$this->getComposeFileName()}";
 
         $fs = new Filesystem();
 

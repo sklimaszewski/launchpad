@@ -39,6 +39,8 @@ clean: ## Removes the vendors, and caches
 	rm -f .php_cs.cache
 	rm -f .sflaunchpad.yml
 	rm -f .sflaunchpad.local.yml
+	rm -f .ezlaunchpad.yml
+	rm -f .ezlaunchpad.local.yml
 	rm -f .dockerignore
 	rm -rf vendor
 	rm -rf symfony

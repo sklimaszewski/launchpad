@@ -126,6 +126,12 @@ class Application extends BaseApplication
             }
         }
 
+        // Legacy eZLaunchpad support
+        $projectFilePath = $projectPath.'/.ezlaunchpad.yml';
+        if ($fs->exists($projectFilePath)) {
+            $configs[] = Yaml::parse(file_get_contents($projectFilePath));
+        }
+
         // Load the project values and OVERRIDE
         $projectFilePath = $projectPath.'/.sflaunchpad.yml';
         if ($fs->exists($projectFilePath)) {
