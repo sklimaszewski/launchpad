@@ -187,6 +187,7 @@ class Initialize extends Command
             'host-machine-mapping' => $this->projectConfiguration->get('docker.host_machine_mapping'),
             'composer-cache-dir' => $this->projectConfiguration->get('docker.host_composer_cache_dir'),
             'env-variables' => $this->projectConfiguration->get('docker.variables'),
+            'context' => $this->projectConfiguration->get('docker.context'),
         ];
         $dockerClient = new DockerComposeClient($options, new ProcessRunner());
         $this->projectStatusDumper->setDockerClient($dockerClient);

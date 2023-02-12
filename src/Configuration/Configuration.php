@@ -36,6 +36,7 @@ class Configuration implements ConfigurationInterface
                             ->useAttributeAsKey('name')
                             ->prototype('scalar')->end()
                         ->end()
+                        ->scalarNode('context')->defaultNull()->end()
                     ->end()
                 ->end()
                 ->arrayNode('provisioning')

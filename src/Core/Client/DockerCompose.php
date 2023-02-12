@@ -39,6 +39,7 @@ class DockerCompose
             'provisioning-folder-name' => null,
             'composer-cache-dir' => null,
             'env-variables' => [],
+            'context' => null,
         ];
         $resolver->setDefaults($defaults);
         $resolver->setRequired(array_keys($defaults));
@@ -51,6 +52,7 @@ class DockerCompose
         $resolver->setAllowedTypes('network-prefix-port', 'int');
         $resolver->setAllowedTypes('host-machine-mapping', ['null', 'string']);
         $resolver->setAllowedTypes('env-variables', 'array');
+        $resolver->setAllowedTypes('context', ['null', 'string']);
         $this->options = $resolver->resolve($options);
         $this->runner = $runner;
     }
@@ -73,6 +75,11 @@ class DockerCompose
     protected function getProjectPath(): string
     {
         return $this->options['project-path'];
+    }
+
+    protected function getContext(): ?string
+    {
+        return $this->options['context'];
     }
 
     public function isSymfony2x(): bool
@@ -211,7 +218,11 @@ class DockerCompose
     protected function perform(string $action, string $service = '', array $args = [], bool $dryRun = false)
     {
         $stringArgs = implode(' ', $args);
-        $command = "docker compose -p {$this->getNetworkName()} -f {$this->getComposeFileName()}";
+        if ($this->getContext()) {
+            $command = "docker --context={$this->getContext()} compose -p {$this->getNetworkName()} -f {$this->getComposeFileName()}";
+        } else {
+            $command = "docker compose -p {$this->getNetworkName()} -f {$this->getComposeFileName()}";
+        }
 
         $fs = new Filesystem();
 

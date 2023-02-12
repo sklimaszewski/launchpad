@@ -2,6 +2,9 @@
 
 ## CHANGELOG
 
+### 3.1.0
+- Add docker context support for mutagen extension
+
 ### 3.0.0
 - Updating to docker compose v2
 - Add legacy support for abandoned eZLaunchpad stack
