@@ -2,6 +2,9 @@
 
 ## CHANGELOG
 
+### 3.2.1
+- Keep docker-compose v1 supported as deprecated
+
 ### 3.2.0
 - Add configurable main container and project folder name
 

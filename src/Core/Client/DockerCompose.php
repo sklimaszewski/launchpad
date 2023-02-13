@@ -224,11 +224,18 @@ class DockerCompose
     protected function perform(string $action, string $service = '', array $args = [], bool $dryRun = false)
     {
         $stringArgs = implode(' ', $args);
-        if ($this->getContext()) {
-            $command = "docker --context={$this->getContext()} compose -p {$this->getNetworkName()} -f {$this->getComposeFileName()}";
+        $dockerComposeV2 = $this->isDockerComposeV2();
+
+        if ($dockerComposeV2 && $this->getContext()) {
+            $command = "docker --context={$this->getContext()} compose";
+        } elseif ($dockerComposeV2) {
+            $command = "docker compose";
         } else {
-            $command = "docker compose -p {$this->getNetworkName()} -f {$this->getComposeFileName()}";
+            // @deprecated
+            $command = "docker-compose";
         }
+
+        $command .= " -p {$this->getNetworkName()} -f {$this->getComposeFileName()}";
 
         $fs = new Filesystem();
 
@@ -267,5 +274,13 @@ class DockerCompose
         )->implode(' ');
 
         return "{$prefix} ".$this->perform('', '', [], true);
+    }
+
+    private function isDockerComposeV2(): bool
+    {
+        $output = $return = null;
+        exec('docker compose version > /dev/null 2>&1', $output, $return);
+
+        return $return === 0;
     }
 }
