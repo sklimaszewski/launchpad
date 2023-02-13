@@ -72,6 +72,7 @@ abstract class DockerComposeCommand extends Command
             'composer-cache-dir' => $this->projectConfiguration->get('docker.host_composer_cache_dir'),
             'env-variables' => $this->projectConfiguration->get('docker.variables'),
             'context' => $this->projectConfiguration->get('docker.context'),
+            'project-folder-name' => $this->projectConfiguration->get('provisioning.project_folder_name'),
         ];
 
         $this->dockerComposeClient = new DockerCompose($options, new ProcessRunner());

@@ -21,7 +21,7 @@ final class Enter extends DockerComposeCommand
     {
         parent::configure();
         $this->setName('docker:enter')->setDescription('Enter in a container.');
-        $this->addArgument('service', InputArgument::OPTIONAL, 'Service to enter in', 'symfony');
+        $this->addArgument('service', InputArgument::OPTIONAL, 'Service to enter in');
         $this->addOption('user', 'u', InputOption::VALUE_REQUIRED, 'User with who to enter in', 'www-data');
         $this->addArgument('shell', InputArgument::OPTIONAL, 'Command to enter in', '/bin/bash');
         $this->setAliases(['enter', 'docker:exec', 'exec']);
@@ -29,12 +29,17 @@ final class Enter extends DockerComposeCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $service = $input->getArgument('service');
+        if (!$service) {
+            $service = $this->projectConfiguration->get('docker.main_container');
+        }
+
         $this->dockerComposeClient->exec(
             $input->getArgument('shell'),
             [
                 '--user', $input->getOption('user'),
             ],
-            $input->getArgument('service')
+            $service
         );
 
         return DockerComposeCommand::SUCCESS;

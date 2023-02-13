@@ -188,6 +188,7 @@ class Initialize extends Command
             'composer-cache-dir' => $this->projectConfiguration->get('docker.host_composer_cache_dir'),
             'env-variables' => $this->projectConfiguration->get('docker.variables'),
             'context' => $this->projectConfiguration->get('docker.context'),
+            'project-folder-name' => $this->projectConfiguration->get('provisioning.project_folder_name'),
         ];
         $dockerClient = new DockerComposeClient($options, new ProcessRunner());
         $this->projectStatusDumper->setDockerClient($dockerClient);

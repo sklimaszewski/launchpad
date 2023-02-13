@@ -13,6 +13,10 @@ You can find the full documentation here: https://sklimaszewski.github.io/symfon
 - [x] Platform.sh support replaced with Kubernetes (K8S) tools
 - [x] Reduce main engine docker image size and build time
 - [x] Add support for PHP8+ and Symfony 6
+- [x] Allow to override Launchpad configuration with a local (uncommited) file
+- [x] Allow to define ENV variables via `.sflaunchpad.yml` file
+- [x] Added optional mutagen support via Docker Extension and custom docker contexts
+- [x] Support additional docker-compose.yml files for MacOS and ARM64
 
 ## Pending minor improvements
 

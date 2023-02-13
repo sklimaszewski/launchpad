@@ -14,6 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Launchpad\Core\Command;
 use Symfony\Launchpad\Core\DockerCommand;
+use Symfony\Launchpad\Core\DockerComposeCommand;
 
 final class CommandStart
 {
@@ -28,7 +29,7 @@ final class CommandStart
         $nonDockerCommandCheckList = [
             'docker:initialize:skeleton', 'docker:initialize',
         ];
-        if (($command instanceof DockerCommand) || (\in_array($command->getName(), $nonDockerCommandCheckList))) {
+        if (($command instanceof DockerCommand) || ($command instanceof DockerComposeCommand) || (\in_array($command->getName(), $nonDockerCommandCheckList))) {
             $output = $return = null;
             exec('docker system info > /dev/null 2>&1', $output, $return);
             if (0 !== $return) {
@@ -52,5 +53,10 @@ final class CommandStart
                 $fs->chmod("{$command->getProjectPath()}/{$recipe}.bash", 0755);
             }
         );
+
+        // MacOS may have slower FS, wait 3 seconds
+        if ($command->getRequiredRecipes()->count() > 0 && SF_ON_OSX) {
+            sleep(3);
+        }
     }
 }

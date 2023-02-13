@@ -2,6 +2,9 @@
 
 ## CHANGELOG
 
+### 3.2.0
+- Add configurable main container and project folder name
+
 ### 3.1.0
 - Add docker context support for mutagen extension
 

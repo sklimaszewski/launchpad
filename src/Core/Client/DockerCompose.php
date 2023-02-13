@@ -40,6 +40,7 @@ class DockerCompose
             'composer-cache-dir' => null,
             'env-variables' => [],
             'context' => null,
+            'project-folder-name' => 'symfony',
         ];
         $resolver->setDefaults($defaults);
         $resolver->setRequired(array_keys($defaults));
@@ -53,6 +54,7 @@ class DockerCompose
         $resolver->setAllowedTypes('host-machine-mapping', ['null', 'string']);
         $resolver->setAllowedTypes('env-variables', 'array');
         $resolver->setAllowedTypes('context', ['null', 'string']);
+        $resolver->setAllowedTypes('project-folder-name', 'string');
         $this->options = $resolver->resolve($options);
         $this->runner = $runner;
     }
@@ -77,16 +79,20 @@ class DockerCompose
         return $this->options['project-path'];
     }
 
+    protected function getProjectFolderName(): string
+    {
+        return $this->options['project-folder-name'];
+    }
+
     protected function getContext(): ?string
     {
         return $this->options['context'];
     }
 
-    public function isSymfony2x(): bool
+    public function isLegacySymfony(): bool
     {
         $fs = new Filesystem();
-
-        return $fs->exists("{$this->getProjectPath()}/symfony/bin/console");
+        return $fs->exists("{$this->getProjectPath()}/{$this->getProjectFolderName()}/app/console");
     }
 
     public function getProjectPathContainer(): string

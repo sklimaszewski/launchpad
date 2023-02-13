@@ -28,7 +28,7 @@ final class SymfonyRun extends DockerComposeCommand
     {
         $allArguments = $input->getArgument('sfcommand');
         $options = '';
-        $this->taskExecutor->runSymfomyCommand(implode(' ', $allArguments)." {$options}");
+        $this->taskExecutor->runSymfonyCommand(implode(' ', $allArguments)." {$options}");
 
         return DockerComposeCommand::SUCCESS;
     }

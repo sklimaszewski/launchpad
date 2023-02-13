@@ -139,30 +139,41 @@ class TaskExecutor
         return $this->execute("{$recipe}.bash ".implode(' ', $args));
     }
 
-    public function runSymfomyCommand(string $arguments): Process
+    public function runSymfonyCommand(string $arguments): Process
     {
-        $consolePath = $this->dockerComposeClient->isSymfony2x() ? 'bin/console' : 'app/console';
+        $consolePath = $this->dockerComposeClient->isLegacySymfony() ? 'app/console' : 'bin/console';
+        $projectFolder = $this->projectConfiguration->get('provisioning.project_folder_name');
 
-        return $this->execute("symfony/{$consolePath} {$arguments}");
+        return $this->execute("{$projectFolder}/{$consolePath} {$arguments}");
     }
 
     public function runComposerCommand(string $arguments): Process
     {
+        $projectFolder = $this->projectConfiguration->get('provisioning.project_folder_name');
+
         return $this->globalExecute(
-            '/usr/local/bin/composer --working-dir='.$this->dockerComposeClient->getProjectPathContainer().'/symfony '.
+            '/usr/local/bin/composer --working-dir='.$this->dockerComposeClient->getProjectPathContainer().'/' . $projectFolder . ' '.
             $arguments
         );
     }
 
-    protected function execute(string $command, string $user = 'www-data', string $service = 'symfony')
+    protected function execute(string $command, string $user = 'www-data', ?string $service = null)
     {
+        if (!$service) {
+            $service = $this->projectConfiguration->get('docker.main_container');
+        }
+
         $command = $this->dockerComposeClient->getProjectPathContainer().'/'.$command;
 
         return $this->globalExecute($command, $user, $service);
     }
 
-    protected function globalExecute(string $command, string $user = 'www-data', string $service = 'symfony')
+    protected function globalExecute(string $command, string $user = 'www-data', ?string $service = null)
     {
+        if (!$service) {
+            $service = $this->projectConfiguration->get('docker.main_container');
+        }
+
         $args = ['--user', $user];
 
         foreach ($this->dockerEnvVars as $envVar) {
