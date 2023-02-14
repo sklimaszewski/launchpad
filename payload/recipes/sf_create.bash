@@ -4,14 +4,8 @@ cd $PROJECTMAPPINGFOLDER
 
 PHP="php"
 COMPOSER="$PHP -d memory_limit=-1 /usr/local/bin/composer"
-REPO=$1
-VERSION=$2
+PROJECT_FOLDER_NAME=$1
 
-
-for prefix in $DATABASE_PREFIXES
-do
-   echo -n "${prefix}-"
-done
 
 DATABASE_PREFIXES=${DATABASE_PREFIXES:-DATABASE}
 for prefix in $DATABASE_PREFIXES
@@ -75,7 +69,7 @@ if [ -f symfony/app/console ]; then
 fi
 
 # Install
-cd symfony
+cd $PROJECT_FOLDER_NAME
 
 $COMPOSER install --no-interaction
 

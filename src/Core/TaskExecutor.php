@@ -109,8 +109,9 @@ class TaskExecutor
     {
         $recipe = 'sf_create';
         $this->checkRecipeAvailability($recipe);
+        $projectFolder = $this->projectConfiguration->get('provisioning.project_folder_name');
 
-        return $this->execute("{$recipe}.bash");
+        return $this->execute("{$recipe}.bash {$projectFolder}");
     }
 
     public function dumpData(): Process

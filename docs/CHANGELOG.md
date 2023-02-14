@@ -2,6 +2,9 @@
 
 ## CHANGELOG
 
+### 3.2.2
+- Minor fix for `sf create` command
+
 ### 3.2.1
 - Keep docker-compose v1 supported as deprecated
 
