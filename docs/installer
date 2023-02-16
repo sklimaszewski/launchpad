@@ -5,7 +5,7 @@
  * @license   For full copyright and license information view LICENSE file distributed with this source code.
  */
 
-$repo = $_SERVER['argv'][1] ?? 'sklimaszewski/symfony-launchpad';
+$repo = $_SERVER['argv'][1] ?? 'upwind-media/symfony-launchpad';
 
 $context = stream_context_create(
     [
@@ -41,7 +41,7 @@ file_put_contents(
 file_put_contents(
     "sf.phar.pubkey",
     file_get_contents(
-        "https://sklimaszewski.github.io/symfony-launchpad/sf.phar.pubkey",
+        "https://upwind-media.github.io/symfony-launchpad/sf.phar.pubkey",
         false,
         $context
     )

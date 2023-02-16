@@ -1,7 +1,7 @@
 {
-    "name": "sklimaszewski/symfony-launchpad",
+    "name": "upwind-media/symfony-launchpad",
     "description": "Symfony Launchpad - Ultimate Symfony CLI Docker & K8S Helper.",
-    "homepage": "https://sklimaszewski.github.io/symfony-launchpad",
+    "homepage": "https://upwind-media.github.io/symfony-launchpad",
     "require": {
         "php": ">=7.2.5",
         "ext-json": "*",
