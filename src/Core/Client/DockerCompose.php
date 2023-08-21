@@ -208,6 +208,7 @@ class DockerCompose
             'DOCKER_TLS_VERIFY' => getenv('DOCKER_TLS_VERIFY'),
             'PATH' => getenv('PATH'),
             'XDEBUG_ENABLED' => false === getenv('XDEBUG_ENABLED') ? '0' : '1',
+            'SSH_AUTH_SOCK' => getenv('SSH_AUTH_SOCK'),
         ];
 
         foreach ($this->options['env-variables'] as $variable => $value) {
