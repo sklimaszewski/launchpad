@@ -2,6 +2,8 @@
 
 ## CHANGELOG
 
+### 3.3.0
+- Forward SSH_AUTH_SOCK from host machine
 
 ### 3.2.3
 - Minor fix for `sf create` command
