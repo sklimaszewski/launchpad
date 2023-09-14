@@ -157,17 +157,22 @@ class TaskExecutor
     public function runSymfonyCommand(string $arguments): Process
     {
         $consolePath = $this->dockerComposeClient->isLegacySymfony() ? 'app/console' : 'bin/console';
-        $projectFolder = $this->projectConfiguration->get('provisioning.project_folder_name');
+        $projectFolder = $this->projectConfiguration->get('provisioning.project_folder_name') ?: '.';
 
         return $this->execute("{$projectFolder}/{$consolePath} {$arguments}");
     }
 
     public function runComposerCommand(string $arguments): Process
     {
+        $workingDir = $this->dockerComposeClient->getProjectPathContainer();
+
         $projectFolder = $this->projectConfiguration->get('provisioning.project_folder_name');
+        if ($projectFolder) {
+            $workingDir .= '/' . $projectFolder;
+        }
 
         return $this->globalExecute(
-            '/usr/local/bin/composer --working-dir='.$this->dockerComposeClient->getProjectPathContainer().'/' . $projectFolder . ' '.
+            '/usr/local/bin/composer --working-dir='. $workingDir . ' ' .
             $arguments
         );
     }

@@ -6,7 +6,6 @@ PHP="php"
 COMPOSER="$PHP -d memory_limit=-1 /usr/local/bin/composer"
 PROJECT_FOLDER_NAME=$1
 
-
 DATABASE_PREFIXES=${DATABASE_PREFIXES:-DATABASE}
 for prefix in $DATABASE_PREFIXES
 do
@@ -58,18 +57,15 @@ do
     esac
 done
 
-if [ ! -d symfony ]; then
-    echo "Not managed yet."
-    exit
-fi
-
-CONSOLE="bin/console"
-if [ -f symfony/app/console ]; then
-    CONSOLE="app/console"
-fi
-
 # Install
-cd $PROJECT_FOLDER_NAME
+if [ "$PROJECT_FOLDER_NAME" != "" ]; then
+    if [ ! -d symfony ]; then
+        echo "Not managed yet."
+        exit
+    fi
+
+    cd $PROJECT_FOLDER_NAME
+fi
 
 $COMPOSER install --no-interaction
 

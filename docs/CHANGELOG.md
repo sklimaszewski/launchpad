@@ -2,6 +2,9 @@
 
 ## CHANGELOG
 
+### 3.3.2
+- Allow for empty project folder name to keep Symfony Launchpad files inside Symfony repository
+
 ### 3.3.1
 - Allow customizing data directory
 

@@ -54,7 +54,7 @@ class DockerCompose
         $resolver->setAllowedTypes('host-machine-mapping', ['null', 'string']);
         $resolver->setAllowedTypes('env-variables', 'array');
         $resolver->setAllowedTypes('context', ['null', 'string']);
-        $resolver->setAllowedTypes('project-folder-name', 'string');
+        $resolver->setAllowedTypes('project-folder-name', ['null', 'string']);
         $this->options = $resolver->resolve($options);
         $this->runner = $runner;
     }
@@ -91,8 +91,14 @@ class DockerCompose
 
     public function isLegacySymfony(): bool
     {
+        $projectPath = $this->getProjectPath();
+        $projectFolderName = $this->getProjectFolderName();
+        if ($projectFolderName) {
+            $projectPath .= '/' . $projectFolderName;
+        }
+
         $fs = new Filesystem();
-        return $fs->exists("{$this->getProjectPath()}/{$this->getProjectFolderName()}/app/console");
+        return $fs->exists("{$projectPath}/app/console");
     }
 
     public function getProjectPathContainer(): string
