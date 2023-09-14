@@ -157,7 +157,7 @@ class TaskExecutor
     public function runSymfonyCommand(string $arguments): Process
     {
         $consolePath = $this->dockerComposeClient->isLegacySymfony() ? 'app/console' : 'bin/console';
-        $projectFolder = $this->projectConfiguration->get('provisioning.project_folder_name') ?: '.';
+        $projectFolder = $this->projectConfiguration->get('provisioning.project_folder_name') ? $this->projectConfiguration->get('provisioning.project_folder_name') : '.';
 
         return $this->execute("{$projectFolder}/{$consolePath} {$arguments}");
     }

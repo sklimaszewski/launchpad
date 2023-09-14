@@ -2,7 +2,8 @@
 
 cd $PROJECTMAPPINGFOLDER
 
-DUMP_DIR="$(pwd)/data"
+DATA_FOLDER_NAME=${DATA_FOLDER_NAME:-data}
+DUMP_DIR="$(pwd)/${DATA_FOLDER_NAME}"
 if [ "$1" != "" ] && [ -d "$1" ]; then
     if [[ "$1" =~ ^/ ]]; then
         DUMP_DIR="$1"

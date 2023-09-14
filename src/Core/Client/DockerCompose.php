@@ -79,7 +79,7 @@ class DockerCompose
         return $this->options['project-path'];
     }
 
-    protected function getProjectFolderName(): string
+    protected function getProjectFolderName(): ?string
     {
         return $this->options['project-folder-name'];
     }
