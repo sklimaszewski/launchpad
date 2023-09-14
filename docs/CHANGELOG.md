@@ -2,6 +2,9 @@
 
 ## CHANGELOG
 
+### 3.3.1
+- Allow customizing data directory
+
 ### 3.3.0
 - Forward SSH_AUTH_SOCK from host machine
 

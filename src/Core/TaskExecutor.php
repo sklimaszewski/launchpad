@@ -119,12 +119,19 @@ class TaskExecutor
         $recipe = 'create_dump';
         $this->checkRecipeAvailability($recipe);
 
+        $storageDirs = array_merge(
+            $this->projectConfiguration->get('provisioning.storage_dirs'),
+            $this->projectConfiguration->get('docker.storage_dirs')
+        );
+
         $args = [];
-        foreach ($this->projectConfiguration->get('docker.storage_dirs') as $name => $path) {
+        foreach ($storageDirs as $name => $path) {
             $args[] = $name.'='.trim($path, '/');
         }
 
-        return $this->execute("{$recipe}.bash ".implode(' ', $args));
+        return $this->execute("{$recipe}.bash ".implode(' ', $args), 'www-data', null, [
+            'DATA_FOLDER_NAME='.$this->projectConfiguration->get('provisioning.data_folder_name'),
+        ]);
     }
 
     public function importData(): Process
@@ -132,12 +139,19 @@ class TaskExecutor
         $recipe = 'import_dump';
         $this->checkRecipeAvailability($recipe);
 
+        $storageDirs = array_merge(
+            $this->projectConfiguration->get('provisioning.storage_dirs'),
+            $this->projectConfiguration->get('docker.storage_dirs')
+        );
+
         $args = [];
-        foreach ($this->projectConfiguration->get('docker.storage_dirs') as $name => $path) {
+        foreach ($storageDirs as $name => $path) {
             $args[] = $name.'='.trim($path, '/');
         }
 
-        return $this->execute("{$recipe}.bash ".implode(' ', $args));
+        return $this->execute("{$recipe}.bash ".implode(' ', $args), 'www-data', null, [
+            'DATA_FOLDER_NAME='.$this->projectConfiguration->get('provisioning.data_folder_name'),
+        ]);
     }
 
     public function runSymfonyCommand(string $arguments): Process
@@ -158,7 +172,7 @@ class TaskExecutor
         );
     }
 
-    protected function execute(string $command, string $user = 'www-data', ?string $service = null)
+    protected function execute(string $command, string $user = 'www-data', ?string $service = null, array $envVars = [])
     {
         if (!$service) {
             $service = $this->projectConfiguration->get('docker.main_container');
@@ -166,10 +180,10 @@ class TaskExecutor
 
         $command = $this->dockerComposeClient->getProjectPathContainer().'/'.$command;
 
-        return $this->globalExecute($command, $user, $service);
+        return $this->globalExecute($command, $user, $service, $envVars);
     }
 
-    protected function globalExecute(string $command, string $user = 'www-data', ?string $service = null)
+    protected function globalExecute(string $command, string $user = 'www-data', ?string $service = null, array $envVars = [])
     {
         if (!$service) {
             $service = $this->projectConfiguration->get('docker.main_container');
@@ -177,7 +191,8 @@ class TaskExecutor
 
         $args = ['--user', $user];
 
-        foreach ($this->dockerEnvVars as $envVar) {
+        $envVars = array_merge($this->dockerEnvVars, $envVars);
+        foreach ($envVars as $envVar) {
             $args = array_merge($args, ['--env', $envVar]);
         }
 

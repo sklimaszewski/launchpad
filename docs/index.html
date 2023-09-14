@@ -336,14 +336,15 @@ Available commands:
                 <pre><code>provisioning:
     folder_name: docker
     project_folder_name: symfony
+    data_folder_name: data
+    storage_dirs:
+        public_storage: symfony/public/storage
 docker:
     compose_filename: docker-compose.yml
     network_name: default-sflaunchpad
     network_prefix_port: 0
     host_machine_mapping: ~
     host_composer_cache_dir: ~
-    storage_dirs:
-        public_storage: symfony/public/storage
     variables:
         RUNNING_ENV: docker
         CUSTOM_DOCKER_ENV: 1
