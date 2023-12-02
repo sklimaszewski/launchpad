@@ -59,7 +59,7 @@ done
 
 # Install
 if [ "$PROJECT_FOLDER_NAME" != "" ]; then
-    if [ ! -d symfony ]; then
+    if [ ! -d "$PROJECT_FOLDER_NAME" ]; then
         echo "Not managed yet."
         exit
     fi
