@@ -2,6 +2,12 @@
 
 ## CHANGELOG
 
+### 3.4.0
+- Switching for docker buildx to support multi-platform builds
+
+### 3.3.4
+- Hotfixes of previous minor releases
+
 ### 3.3.3
 - Hotfixes of previous minor releases
 
