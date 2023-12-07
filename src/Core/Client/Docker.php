@@ -37,15 +37,22 @@ class Docker
         $this->runner = $runner;
     }
 
-    public function build(string $container, array $tags = ['latest'], ?string $cacheFrom = null)
+    public function build(string $container, array $tags = ['latest'], ?string $cacheFrom = null, ?string $platform = null, bool $push)
     {
         $args = [
-            '--network host',
             '--build-arg BUILDKIT_INLINE_CACHE=1',
         ];
 
         if ($cacheFrom) {
             $args[] = '--cache-from '.$this->options['registry-name'].'/'.$container.':'.$cacheFrom;
+        }
+
+        if ($platform) {
+            $args[] = '--platform ' . $platform;
+        }
+
+        if ($push) {
+            $args[] = '--push';
         }
 
         foreach ($tags as $tag) {
@@ -55,7 +62,7 @@ class Docker
         $args[] = '--file '.$this->options['provisioning-folder-name'].'/dev/'.$container.'/Dockerfile';
         $args[] = '.';
 
-        return $this->perform('build', $args);
+        return $this->perform('buildx build',$args);
     }
 
     public function login()

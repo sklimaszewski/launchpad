@@ -63,5 +63,4 @@ services:
     Symfony\Launchpad\Command\Kubernetes\Build: ~
     Symfony\Launchpad\Command\Kubernetes\Deploy: ~
     Symfony\Launchpad\Command\Kubernetes\Enter: ~
-    Symfony\Launchpad\Command\Kubernetes\Push: ~
     Symfony\Launchpad\Command\Kubernetes\Tunnel: ~

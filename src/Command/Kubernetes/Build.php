@@ -24,15 +24,23 @@ final class Build extends DockerCommand
             ['latest']
         );
         $this->addOption('cache-from', null, InputOption::VALUE_REQUIRED, 'Build image from cache');
+        $this->addOption('architecture', 'a', InputOption::VALUE_REQUIRED, 'Specify build architecture (linux/amd64, linux/arm64)');
+        $this->addOption('push', 'p', InputOption::VALUE_NONE, 'Build image from cache');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->dockerClient->login();
+
         $this->dockerClient->build(
             $input->getArgument('container'),
             $input->getOption('tag'),
-            $input->getOption('cache-from')
+            $input->getOption('cache-from'),
+            $input->getOption('architecture'),
+            (bool) $input->getOption('push')
         );
+
+        $this->dockerClient->logout();
 
         return DockerCommand::SUCCESS;
     }
