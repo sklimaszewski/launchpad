@@ -39,9 +39,7 @@ class Docker
 
     public function build(string $container, array $tags = ['latest'], ?string $cacheFrom = null, ?string $platform = null, bool $push)
     {
-        $args = [
-            '--build-arg BUILDKIT_INLINE_CACHE=1',
-        ];
+        $args = [];
 
         if ($cacheFrom) {
             $args[] = '--cache-from '.$this->options['registry-name'].'/'.$container.':'.$cacheFrom;

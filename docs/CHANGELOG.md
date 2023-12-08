@@ -2,6 +2,9 @@
 
 ## CHANGELOG
 
+### 3.4.1
+- Fixing docker buildx command for K8S
+
 ### 3.4.0
 - Switching for docker buildx to support multi-platform builds
 
