@@ -34,6 +34,10 @@ codeclean: ## Run the codechecker
 phar: ## Build the box locally (bypass the PROD)
 	bash $(SCRIPS_DIR)/buildbox.bash
 
+.PHONY: dockerimage
+dockerimage: ## Build Docker image with current Launchpad version
+	bash $(SCRIPS_DIR)/dockerbuild.bash
+
 .PHONY: clean
 clean: ## Removes the vendors, and caches
 	rm -f .php_cs.cache
