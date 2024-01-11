@@ -24,12 +24,14 @@ do
 
         DATABASE_NAME_VAR=NAME
         DATABASE_HOST_VAR=HOST
+        DATABASE_PORT_VAR=PORT
         DATABASE_USER_VAR=USER
         DATABASE_PASSWORD_VAR=PASS
     else
         PROTOCOL="mysql"
         DATABASE_NAME_VAR=${prefix}_NAME
         DATABASE_HOST_VAR=${prefix}_HOST
+        DATABASE_PORT_VAR=3306
         DATABASE_USER_VAR=${prefix}_USER
         DATABASE_PASSWORD_VAR=${prefix}_PASSWORD
     fi
@@ -48,6 +50,14 @@ do
         mongodb)
             # Wait for the DB
             sleep 3
+            echo ""
+        ;;
+        postgresql)
+            # Wait for the DB
+            while ! pg_isready -h ${!DATABASE_HOST_VAR} -p ${!DATABASE_PORT_VAR} > /dev/null 2> /dev/null; do
+                echo -n "."
+                sleep 1
+            done
             echo ""
         ;;
         *)

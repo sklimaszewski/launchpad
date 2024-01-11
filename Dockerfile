@@ -4,7 +4,7 @@ ARG HELM_VERSION="v3.13.2"
 ARG KUBECTL_VERSION="v1.28.2"
 
 # Install Docker and base dependencies
-RUN apk add --no-cache ca-certificates openssl openssh-client docker-cli curl bash git
+RUN apk add --no-cache ca-certificates openssl openssh-client docker-cli docker-cli-buildx curl bash git
 
 # Install Helm
 RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 && \

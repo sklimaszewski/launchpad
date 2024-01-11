@@ -53,6 +53,14 @@ do
             sleep 3
             echo ""
         ;;
+        postgresql)
+            # Wait for the DB
+            while ! pg_isready -h ${!DATABASE_HOST_VAR} -p ${!DATABASE_PORT_VAR} > /dev/null 2> /dev/null; do
+                echo -n "."
+                sleep 1
+            done
+            echo ""
+        ;;
         *)
             echo "Unknown protocol '${PROTOCOL}'\n" >&2
             exit 1
@@ -85,12 +93,8 @@ if [ -f app/console ]; then
     CONSOLE="app/console"
 fi
 
-
 if $COMPOSER run-script -l | grep -q " $INIT_DATA "; then
    $COMPOSER run-script $INIT_DATA
 fi
 
-
-
 echo "Installation OK"
-

@@ -26,12 +26,14 @@ do
 
         DATABASE_NAME_VAR=NAME
         DATABASE_HOST_VAR=HOST
+        DATABASE_PORT_VAR=PORT
         DATABASE_USER_VAR=USER
         DATABASE_PASSWORD_VAR=PASS
     else
         PROTOCOL="mysql"
         DATABASE_NAME_VAR=${prefix}_NAME
         DATABASE_HOST_VAR=${prefix}_HOST
+        DATABASE_PORT_VAR=3306
         DATABASE_USER_VAR=${prefix}_USER
         DATABASE_PASSWORD_VAR=${prefix}_PASSWORD
     fi
@@ -57,6 +59,18 @@ do
         mongodb)
             echo "Dumping ${!DATABASE_NAME_VAR} database."
             mongodump --uri=${!DATABASE_URL_VAR} --gzip --archive=${DUMP_DIR}/${DB_FILE_NAME}.gz
+            echo "${!DATABASE_NAME_VAR} database dumped."
+        ;;
+        postgresql)
+            # Wait for the DB
+            while ! pg_isready -h ${!DATABASE_HOST_VAR} -p ${!DATABASE_PORT_VAR} > /dev/null 2> /dev/null; do
+                echo -n "."
+                sleep 1
+            done
+            echo ""
+
+            echo "Dumping ${!DATABASE_NAME_VAR} database."
+            PGPASSWORD="${!DATABASE_PASSWORD_VAR}" pg_dump -h ${!DATABASE_HOST_VAR} -p ${!DATABASE_PORT_VAR} -U ${!DATABASE_USER_VAR} -F c -d ${!DATABASE_NAME_VAR} | gzip > $DUMP_DIR/$DB_FILE_NAME.tar.gz
             echo "${!DATABASE_NAME_VAR} database dumped."
         ;;
         *)

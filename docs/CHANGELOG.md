@@ -2,6 +2,9 @@
 
 ## CHANGELOG
 
+### 3.5.0
+- Add PostgreSQL database support
+
 ### 3.4.1
 - Fixing docker buildx command for K8S
 
