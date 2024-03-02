@@ -27,7 +27,7 @@ class Kubectl
         ];
         $resolver->setDefaults($defaults);
         $resolver->setRequired(array_keys($defaults));
-        $resolver->setAllowedTypes('kubeconfig-file', 'string');
+        $resolver->setAllowedTypes('kubeconfig-file', ['null', 'string']);
         $resolver->setAllowedTypes('namespace', 'string');
         $this->options = $resolver->resolve($options);
         $this->runner = $runner;
@@ -57,8 +57,11 @@ class Kubectl
     ) {
         $args = [
             "--namespace {$this->getNamespace()}",
-            "--kubeconfig {$this->getKubeConfigFile()}",
         ];
+
+        if ($this->getKubeConfigFile()) {
+            $args[] = "--kubeconfig {$this->getKubeConfigFile()}";
+        }
 
         $stringOptions = implode(' ', $args);
         $pod = "$(kubectl get {$stringOptions} pods --no-headers -o custom-columns=:metadata.name | grep \"$pod\")";
@@ -73,7 +76,7 @@ class Kubectl
         return $fullCommand;
     }
 
-    protected function getKubeConfigFile(): string
+    protected function getKubeConfigFile()
     {
         return $this->options['kubeconfig-file'];
     }

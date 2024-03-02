@@ -2,6 +2,9 @@
 
 ## CHANGELOG
 
+### 3.6.0
+- Allow passing empty kubeconfig file to use default kubectl configuration
+
 ### 3.5.0
 - Add PostgreSQL database support
 

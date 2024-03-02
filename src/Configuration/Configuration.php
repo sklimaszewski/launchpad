@@ -56,7 +56,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('folder_name')->defaultValue('kubernetes')->end()
-                        ->scalarNode('kubeconfig')->defaultValue('~/.kube/config')->end()
+                        ->scalarNode('kubeconfig')->defaultNull()->end()
                         ->scalarNode('namespace')->defaultValue('symfony')->end()
                         ->arrayNode('registry')
                             ->addDefaultsIfNotSet()

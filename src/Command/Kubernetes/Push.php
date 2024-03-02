@@ -21,10 +21,12 @@ final class Push extends DockerCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->dockerClient->login();
+
         $this->dockerClient->push(
             $input->getArgument('container'),
             $input->getOption('tag')
         );
+
         $this->dockerClient->logout();
 
         return DockerCommand::SUCCESS;

@@ -49,16 +49,13 @@ abstract class HelmCommand extends Command
         }
 
         // Home directory fix
-        $kubeConfigPath = str_replace('~/', getenv('HOME').'/', $kubeConfigPath);
+        if ($kubeConfigPath) {
+            $kubeConfigPath = str_replace('~/', getenv('HOME').'/', $kubeConfigPath);
+        }
 
         $namespace = $this->projectConfiguration->get('kubernetes.namespace');
         if ($input->getOption('namespace')) {
             $namespace = $input->getOption('namespace');
-        }
-
-        $fs = new Filesystem();
-        if (!$fs->exists($kubeConfigPath)) {
-            throw new RuntimeException("There is no kubeconfig file at {$kubeConfigPath}");
         }
 
         $helmChartPath = $this->projectConfiguration->getKubernetesHelmPath();

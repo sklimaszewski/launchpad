@@ -34,7 +34,7 @@ class Helm
         $resolver->setAllowedTypes('registry-name', ['null', 'string']);
         $resolver->setAllowedTypes('registry-username', ['null', 'string']);
         $resolver->setAllowedTypes('registry-password', ['null', 'string']);
-        $resolver->setAllowedTypes('kubeconfig-file', 'string');
+        $resolver->setAllowedTypes('kubeconfig-file', ['null', 'string']);
         $resolver->setAllowedTypes('helm-chart-path', 'string');
         $resolver->setAllowedTypes('namespace', 'string');
         $this->options = $resolver->resolve($options);
@@ -59,7 +59,7 @@ class Helm
         return $this->perform('dependency update', '');
     }
 
-    protected function getKubeConfigFile(): string
+    protected function getKubeConfigFile()
     {
         return $this->options['kubeconfig-file'];
     }
@@ -114,7 +114,7 @@ class Helm
      */
     protected function perform(string $action, string $name, array $flags = [], bool $dryRun = false)
     {
-        if (!isset($flags['kubeconfig'])) {
+        if (!isset($flags['kubeconfig']) && $this->getKubeConfigFile()) {
             $flags['kubeconfig'] = $this->getKubeConfigFile();
         }
 
@@ -126,6 +126,11 @@ class Helm
         return $fullCommand;
     }
 
+    /**
+     * @param array $flags
+     * 
+     * @return string
+     */
     private function convertFlagsToArgument(array $flags = []): string
     {
         $args = [];

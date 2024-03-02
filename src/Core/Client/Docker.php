@@ -65,22 +65,26 @@ class Docker
 
     public function login()
     {
-        $args = [
-            $this->getRegistryHost(),
-            '--username '.$this->options['registry-username'],
-            '--password-stdin',
-        ];
+        if ($this->getRegistryHost() && $this->options['registry-username'] && $this->options['registry-password']) {
+            $args = [
+                $this->getRegistryHost(),
+                '--username ' . $this->options['registry-username'],
+                '--password-stdin',
+            ];
 
-        return $this->perform('login', $args, $this->options['registry-password']);
+            return $this->perform('login', $args, $this->options['registry-password']);
+        }
     }
 
     public function logout()
     {
-        $args = [
-            $this->getRegistryHost(),
-        ];
+        if ($this->getRegistryHost() && $this->options['registry-username'] && $this->options['registry-password']) {
+            $args = [
+                $this->getRegistryHost(),
+            ];
 
-        return $this->perform('logout', $args);
+            return $this->perform('logout', $args);
+        }
     }
 
     public function push(string $container, string $tag = 'latest')
@@ -99,8 +103,12 @@ class Docker
         ];
     }
 
-    protected function getRegistryHost(): string
+    protected function getRegistryHost()
     {
+        if (!$this->options['registry-name']) {
+            return null;
+        }
+
         return parse_url('//'.$this->options['registry-name'], PHP_URL_HOST);
     }
 
