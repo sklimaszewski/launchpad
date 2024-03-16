@@ -48,6 +48,7 @@ final class ApplicationUpdate
             'list', 'help', 'test', 'docker:initialize:skeleton',
             'docker:initialize', 'docker:create',
             'self-update', 'rollback',
+            'k8s:build', 'k8s:deploy', 'k8s:enter', 'k8s:tunnel',
         ];
         if (!\in_array($command->getName(), $authorized)) {
             $fs = new Filesystem();

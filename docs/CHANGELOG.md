@@ -2,6 +2,9 @@
 
 ## CHANGELOG
 
+### 3.6.1
+- Minor improvement for different K8S environments
+
 ### 3.6.0
 - Allow passing empty kubeconfig file to use default kubectl configuration
 
