@@ -1,0 +1,43 @@
+on:
+    push:
+        tags:
+            - 'v*'
+
+name: Upload Phar
+
+jobs:
+    build:
+        name: Upload Phar
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - name: Build phar
+              env:
+                  SF_LAUNCHPAD_PHAR_PRIVATE_KEY: ${{ secrets.SF_LAUNCHPAD_PHAR_PRIVATE_KEY }}
+              run: |
+                  echo "${SF_LAUNCHPAD_PHAR_PRIVATE_KEY}" > sflaunchpad-private.pem
+                  ulimit -Sn 4096
+                  make phar
+                  rm sflaunchpad-private.pem
+
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1.0.0
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: Release ${{ github.ref }}
+                  draft: false
+                  prerelease: false
+
+            - name: Upload Release Asset
+              id: upload-release-asset
+              uses: actions/upload-release-asset@v1.0.1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./sf.phar
+                  asset_name: sf.phar
+                  asset_content_type: application/octet-stream
