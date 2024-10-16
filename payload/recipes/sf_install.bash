@@ -60,6 +60,8 @@ do
                 sleep 1
             done
             echo ""
+
+            PGPASSWORD="${!DATABASE_PASSWORD_VAR}" psql -h "${!DATABASE_HOST_VAR}" -U "${!DATABASE_USER_VAR}" -c "CREATE DATABASE ${!DATABASE_NAME_VAR}"
         ;;
         *)
             echo "Unknown protocol '${PROTOCOL}'\n" >&2

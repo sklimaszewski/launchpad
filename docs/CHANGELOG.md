@@ -2,6 +2,9 @@
 
 ## CHANGELOG
 
+### 3.6.3
+- Fixing Postgres database initialization
+
 ### 3.6.2
 - Fixing MariaDB dump file compatibility (https://mariadb.org/mariadb-dump-file-compatibility-change/)
 
