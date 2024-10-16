@@ -2,6 +2,9 @@
 
 ## CHANGELOG
 
+### 3.6.2
+- Fixing MariaDB dump file compatibility (https://mariadb.org/mariadb-dump-file-compatibility-change/)
+
 ### 3.6.1
 - Minor improvement for different K8S environments
 

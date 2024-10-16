@@ -53,6 +53,7 @@ do
 
             echo "Dumping ${!DATABASE_NAME_VAR} database."
             $MYSQLDUMP ${!DATABASE_NAME_VAR} > $DUMP_DIR/$DB_FILE_NAME.sql
+            sed -i '1{/999999.*sandbox/d}' $DUMP_DIR/$DB_FILE_NAME.sql
             gzip -f $DUMP_DIR/$DB_FILE_NAME.sql
             echo "${!DATABASE_NAME_VAR} database dumped."
         ;;

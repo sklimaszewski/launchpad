@@ -56,7 +56,7 @@ do
             MYSQL="mysql -h${!DATABASE_HOST_VAR} -u${!DATABASE_USER_VAR} -p${!DATABASE_PASSWORD_VAR}"
 
             echo "Importing ${!DATABASE_NAME_VAR} database."
-            zcat $DB_FILE_PATH | $MYSQL ${!DATABASE_NAME_VAR}
+            zcat $DB_FILE_PATH | sed '1{/999999.*sandbox/d}' | $MYSQL ${!DATABASE_NAME_VAR}
             echo "${!DATABASE_NAME_VAR} database imported."
         ;;
         mongodb)
